@@ -7,14 +7,14 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry; // i am very upset about the amount of effort it took me to get this single stupid import to work i hate my life life is suffering and pain
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotMap;
@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
-
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 
@@ -37,7 +36,7 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup rightMotors;
   private final Encoder m_leftEncoder;
   private final Encoder m_rightEncoder;
-  private final ADXRS450_Gyro m_gyro;
+  // private final ADXRS450_Gyro m_gyro;
 
   
   
@@ -45,7 +44,7 @@ public class DriveTrain extends SubsystemBase {
   private EncoderSim m_leftEncoderSim;
   private EncoderSim m_rightEncoderSim;
   private Field2d fieldSim;
-  private ADXRS450_GyroSim m_gyroSim;
+  // private ADXRS450_GyroSim m_gyroSim;
   private final DifferentialDriveOdometry m_odometry;
 
   
@@ -68,7 +67,7 @@ public class DriveTrain extends SubsystemBase {
     new Encoder(RobotMap.MOTOR_RIGHT_MASTER_ID,RobotMap.MOTOR_RIGHT_SLAVE_ID,RobotMap.RIGHT_SIDE_INVERTED);
     m_leftEncoder.setDistancePerPulse(DriveConstants.ENCODER_PULSE_DISTANCE);
     m_rightEncoder.setDistancePerPulse(DriveConstants.ENCODER_PULSE_DISTANCE);
-    m_gyro = new ADXRS450_Gyro();
+    // m_gyro = new ADXRS450_Gyro();
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     // this code basically assigns motor controllers to variables, then groups for the sides, then the drivetrain and assigns values to our encoders
@@ -81,12 +80,12 @@ public class DriveTrain extends SubsystemBase {
             SimulationConstants.GEAR_RATIO,
             SimulationConstants.MOMENT_OF_INERTIA,
             SimulationConstants.DRIVETRAIN_WEIGHT,
-            SimulationConstants.WHEEL_RADIUS,
+            DriveConstants.WHEEL_RADIUS,
             DriveConstants.TRACK_WIDTH,
             SimulationConstants.MEASUREMENT_NOISE);
       m_leftEncoderSim = new EncoderSim(m_leftEncoder);
       m_rightEncoderSim = new EncoderSim(m_rightEncoder);
-      m_gyroSim = new ADXRS450_GyroSim(m_gyro);
+      // m_gyroSim = new ADXRS450_GyroSim(m_gyro);
       fieldSim = new Field2d();
       SmartDashboard.putData("Field", fieldSim);
           // to edit the values of this part of code edit the constants is Constants.java
@@ -110,7 +109,7 @@ public class DriveTrain extends SubsystemBase {
         m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
         m_rightEncoderSim.setDistance(m_drivetrainSimulator.getRightPositionMeters());
         m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
-        m_gyroSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
+        // m_gyroSim.setAngle(-m_drivetrainSimulator.getHeading().getDegrees());
         //  note, the code that these are using may involve a drive function that controls the speed of the motors using volts directly
         // also only important for simulation so only look at this if you are having issues with simulation results
       }
@@ -139,7 +138,7 @@ public class DriveTrain extends SubsystemBase {
   
   
   public void zeroHeading() {
-    m_gyro.reset();
+    // m_gyro.reset();
   }
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
@@ -170,7 +169,27 @@ public class DriveTrain extends SubsystemBase {
     m_rightEncoder.reset();
   }
   public double getHeading() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
+
+    double cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE / 100 / DriveConstants.ENCODER_CPR; // divides by 100 to convert to centimeters
+
+    //double deltaTicks = getAverageEncoderDistance() / 
+    //double encoderDistanceCm = getAverageEncoderDistance() * cmPerTick; // also known as deltaLinearPosition
+
+    double degreesPerTick = cmPerTick / DriveConstants.TRACK_WIDTH * (180 / Math.PI);
+
+    
+
+    double encoderDifference = m_leftEncoder.getDistance() - m_rightEncoder.getDistance();
+
+    double turningValue = encoderDifference * degreesPerTick;
+    
+  //System.out.println("LEFT: " + m_leftEncoder.getDistance() + "\nRIGHT: " + m_rightEncoder.getDistance());
+    System.out.println(encoderDifference);
+    //System.out.println(turningValue);
+
+    return (turningValue % 360) * -1; // Return the deltaTheta
+    
+    // return Math.IEEEremainder(m_gyro.getAngle(), 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
     return  new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
