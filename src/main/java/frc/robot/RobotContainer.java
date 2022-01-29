@@ -47,11 +47,9 @@ public class RobotContainer {
     m_OI = new OI();
     // Configure the button bindings
     configureButtonBindings();
-    driveTrain.setDefaultCommand(
-      // A split-stick arcade command, with forward/backward controlled by the left
-      // hand, and turning controlled by the right.
-      new RunCommand(() -> driveTrain.drive(m_OI.getJoystick1RawAxis(1),m_OI.getJoystick1RawAxis(0) ),driveTrain));
-  }
+    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getJoystick1RawAxis(1)*getDriveMultiplier(),m_OI.getJoystick1RawAxis(0)*getDriveMultiplier() ),driveTrain));
+  
+    }
 
 
   /**
@@ -60,7 +58,18 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private double getDriveMultiplier(){
+    double driveMultiplier = ((-m_OI.getJoystick1RawAxis(3) + 1) / 2);
+    // this codes to have the robot break when the scaler sets the speed to 0
+    if(driveMultiplier == 0){
+      driveTrain.setBreakStatus(true);
+    }
+    else{
+      driveTrain.setBreakStatus(false);
+    }
+    return driveMultiplier;
+  }
+   private void configureButtonBindings() {}
   
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -72,10 +81,12 @@ public class RobotContainer {
   }
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    var autoVoltageConstrain = 
+    var autoVoltageConstraint = 
       new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(SimulationConstants.VOLTS, SimulationConstants.VOLTS_SCNDS_PER_METER, SimulationConstants.VOLTS_SCNDS_SQUARED_PER_METER),
        DriveConstants.DRIVE_KINEMATICS, DriveConstants.AUTO_VOLTAGE_CONSTRAINT);
-    String trajectoryJSON = "C:\\Users\\ChainLynx\\Documents\\ChainLynx-2022-code-auto\\PathWeaver\\output\\3pointspath.wpilib.json";
+    
+    // VERY IMPORTANT MAKE SURE TO UPDATE THIS DIRECTORY WHEN YOU RUN THIS CODE TO MATCH YOUR OWN FOLDER OR THE CODE WILL NOT WORK
+    String trajectoryJSON = "C:\\Users\\ChainLynx\\Documents\\frc-2022-rapid-react-code\\PathWeaver\\output\\3pointspath.wpilib.json";
     Trajectory pathWeaverTrajectory = new Trajectory();
     try{
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
@@ -101,6 +112,7 @@ public class RobotContainer {
     
     driveTrain.resetOdometry(pathWeaverTrajectory.getInitialPose());
     return autoCommand.andThen(() -> driveTrain.tankDriveVolts(0, 0));
+    
   }
   
 }
