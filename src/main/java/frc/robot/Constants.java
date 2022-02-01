@@ -52,7 +52,6 @@ public final class Constants {
       public static final double GEAR_RATIO = 5.85; // we have a gear ratio of 5.85:1
 	   public static final double MOMENT_OF_INERTIA = 5;// the units for this are kgm^2 and we currently do not have accurate numbers for them so if you need accurate numbers nag design team
       public static final double DRIVETRAIN_WEIGHT = 5.1; //weight of the drivetrain in kg
-	   public static final double WHEEL_RADIUS = Units.inchesToMeters(3); //our wheels have a radius of 3 inches
 	   
 	   public static final Matrix<N7, N1> MEASUREMENT_NOISE = null; // this is for measurement noise so important if we want to be really accurate in our simulations
       
@@ -68,13 +67,16 @@ public final class Constants {
    }
    public static final class DriveConstants{
 
-   
-      public static final double ENCODER_CPR = 1024; // this is just a placeholder value; value subject to change
-      public static final double ENCODER_PULSE_DISTANCE = (SimulationConstants.WHEEL_RADIUS * Math.PI / ENCODER_CPR);
+      public static final double WHEEL_RADIUS = Units.inchesToMeters(3); //our wheels have a radius of 3 inches
+      public static final double WHEEL_CIRCUMFERENCE = WHEEL_RADIUS * 2 * Math.PI;
+      public static final double ENCODER_PPR = 2048;
+      public static final double ENCODER_CPR = ENCODER_PPR * 4; // this is just a placeholder value; value subject to change
+      public static final double ENCODER_PULSE_DISTANCE = (WHEEL_RADIUS * Math.PI / ENCODER_CPR);
       public static final double TRACK_WIDTH = .58; // there are .58 meters between the left and right wheels
       public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
       public static final double AUTO_VOLTAGE_CONSTRAINT = 7;
-    public static final double AUTO_DRIVE_SPEED = 0;
+      public static final double AUTO_DRIVE_SPEED = 0;
+
 
    } 
 
