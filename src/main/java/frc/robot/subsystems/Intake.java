@@ -25,10 +25,14 @@ public class Intake extends SubsystemBase {
   }
   public void intakeRunning(boolean intakeOn){
     if (intakeOn != currentIntakeStatus){
-      
+      if(intakeOn == true){
+        intakeMotor.set(1.0);
+      }
+      else{
+        intakeMotor.set(0);
+      }
+      currentIntakeStatus = intakeOn;
     }
-
-
   }
 
 }
