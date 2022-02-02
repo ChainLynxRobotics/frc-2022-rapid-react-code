@@ -16,17 +16,17 @@ import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryUtil;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+// import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint; //pathweaver has this so we dont need to use this
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SimulationConstants;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,27 +39,27 @@ public class RobotContainer {
   
   private static DriveTrain driveTrain;
   private static OI m_OI;
-  
+  private static Intake intake;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
 
   public RobotContainer() {
     driveTrain = new DriveTrain();
     m_OI = new OI();
+    intake = new Intake();
     // Configure the button bindings
-    configureButtonBindings();
-    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getJoystick1RawAxis(1)*getDriveMultiplier(),m_OI.getJoystick1RawAxis(0)*getDriveMultiplier() ),driveTrain));
+    startCommands();
+    
   
     }
-
-
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private double getDriveMultiplier(){
-    double driveMultiplier = ((-m_OI.getJoystick1RawAxis(3) + 1) / 2);
+  // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
+   private void startCommands() {
+    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
+    intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickButton(1)),intake));
+   }
+   // method to allow for constant multiplier for drivetrain speed
+   private double getDriveMultiplier(){
+    // this makes the z axis slider go from 0->1 instead of -1->1
+    double driveMultiplier = ((-m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
     // this codes to have the robot break when the scaler sets the speed to 0
     if(driveMultiplier == 0){
       driveTrain.setBreakStatus(true);
@@ -69,8 +69,6 @@ public class RobotContainer {
     }
     return driveMultiplier;
   }
-   private void configureButtonBindings() {}
-  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -81,10 +79,11 @@ public class RobotContainer {
   }
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+    /*
     var autoVoltageConstraint = 
       new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(SimulationConstants.VOLTS, SimulationConstants.VOLTS_SCNDS_PER_METER, SimulationConstants.VOLTS_SCNDS_SQUARED_PER_METER),
        DriveConstants.DRIVE_KINEMATICS, DriveConstants.AUTO_VOLTAGE_CONSTRAINT);
-    
+    */
     // VERY IMPORTANT MAKE SURE TO UPDATE THIS DIRECTORY WHEN YOU RUN THIS CODE TO MATCH YOUR OWN FOLDER OR THE CODE WILL NOT WORK
     String trajectoryJSON = "C:\\Users\\ChainLynx\\Documents\\frc-2022-rapid-react-code\\PathWeaver\\output\\3pointspath.wpilib.json";
     Trajectory pathWeaverTrajectory = new Trajectory();
