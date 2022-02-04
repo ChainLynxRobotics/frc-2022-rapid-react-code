@@ -20,6 +20,9 @@ public class OI {
     public boolean getOperatorStickButton(int button){
         return operatorStick.getRawButton(button);
     }
+    public double getOperatorStickAxis(int axis){
+        return operatorStick.getRawAxis(axis);
+    }
     public int getDriveStickSliderAxis(){
         return driveStick.getAxisCount() -1;
     }

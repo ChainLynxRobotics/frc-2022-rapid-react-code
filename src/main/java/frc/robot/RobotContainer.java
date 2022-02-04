@@ -27,6 +27,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SimulationConstants;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.RobotArm;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,7 +37,7 @@ import frc.robot.subsystems.Intake;
 */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  
+  private static RobotArm robotArm;
   private static DriveTrain driveTrain;
   private static OI m_OI;
   private static Intake intake;
@@ -46,6 +47,7 @@ public class RobotContainer {
     driveTrain = new DriveTrain();
     m_OI = new OI();
     intake = new Intake();
+    robotArm = new RobotArm();
     // Configure the button bindings
     startCommands();
     
@@ -54,7 +56,8 @@ public class RobotContainer {
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
-    intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickButton(1)),intake));
+    intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickAxis(1)),intake));
+    robotArm.setDefaultCommand(new RunCommand(() ->robotArm.toggleHeight(m_OI.getOperatorStickButton(1)), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
