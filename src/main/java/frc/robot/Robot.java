@@ -71,10 +71,17 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {CommandScheduler.getInstance().cancelAll();}
+  public void disabledInit() {CommandScheduler.getInstance().cancelAll();
+  robotContainer.getRobotDrive().setBreakStatus(true);
+  }
 
   @Override
   public void disabledPeriodic() {}
+ 
+  @Override
+  public void disabledExit() {
+      robotContainer.getRobotDrive().setBreakStatus(false);
+  }
   
 
 

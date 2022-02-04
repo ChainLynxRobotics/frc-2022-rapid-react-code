@@ -34,11 +34,12 @@ public final class Constants {
         public static final int MOTOR_RIGHT_SLAVE_ID = 3;
         public static final boolean LEFT_SIDE_INVERTED = false;
         public static final boolean RIGHT_SIDE_INVERTED = true;
-
+        public static final int[] ROBOT_ARM_SOLENOIDS = {0,1};
         // joystick port, may change if there is a mouse or something plugged in, be careful about that
 
         public static final int JOYSTICK_PORT1 = 0;
 	     public static final int JOYSTICK_PORT2 = 1;
+        public static final int INTAKE_MOTOR_ID = 5;
 
 
 
