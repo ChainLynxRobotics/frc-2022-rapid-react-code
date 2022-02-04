@@ -156,7 +156,7 @@ public class DriveTrain extends SubsystemBase {
   
   
   public void zeroHeading() {
-    // m_gyro.reset();
+    m_gyro.reset();
   }
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
