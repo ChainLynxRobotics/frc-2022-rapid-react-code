@@ -7,28 +7,28 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.RobotMap;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   
   private WPI_VictorSPX intakeMotor;
-  private boolean currentIntakeStatus;
+  
   public Intake() {
-    intakeMotor = new WPI_VictorSPX(5);
-
-    currentIntakeStatus = false;
+    intakeMotor = new WPI_VictorSPX(RobotMap.INTAKE_MOTOR_ID);
+    
   }
 
-  
-  public void intakeRunning(boolean intakeOn){
-    if (intakeOn != currentIntakeStatus){
-      if(intakeOn == true){
-        intakeMotor.set(1.0);
-      }
-      else{
-        intakeMotor.set(0);
-      }
-      currentIntakeStatus = intakeOn;
+      
+  public void intakeRunning(double inputSpeed){
+    if( inputSpeed > 0.05 ){
+      intakeMotor.set(1);
+    }
+    else if( inputSpeed < 0.05){
+      intakeMotor.set(-1);
+    }
+    else{
+      intakeMotor.set(0);
     }
   }
 
