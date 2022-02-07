@@ -20,16 +20,17 @@ public class Intake extends SubsystemBase {
   }
 
       
-  public void intakeRunning(double inputSpeed){
-    if( inputSpeed > 0.05 ){
-      intakeMotor.set(1);
-    }
-    else if( inputSpeed < 0.05){
+  public void intakeRunning(double inputSpeed, boolean intakeOn){
+    if(intakeOn == false){
+      intakeMotor.set(0);
+    } 
+    else if( inputSpeed > 0.05 ){
       intakeMotor.set(-1);
     }
     else{
-      intakeMotor.set(0);
+      intakeMotor.set(1);
     }
+    
   }
 
 }
