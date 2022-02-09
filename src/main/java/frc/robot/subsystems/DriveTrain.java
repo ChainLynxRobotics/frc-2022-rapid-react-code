@@ -23,16 +23,19 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.simulation.ADIS16448_IMUSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 
 public class DriveTrain extends SubsystemBase {
   /** Creates a new DriveTrain. */
-  private WPI_VictorSPX m_leftDriveFront, m_leftDriveBack;
-  private WPI_VictorSPX m_rightDriveFront, m_rightDriveBack;
+  private CANSparkMax m_leftDriveFront, m_leftDriveBack;
+  private CANSparkMax m_rightDriveFront, m_rightDriveBack;
   public DifferentialDrivetrainSim m_drivetrainSimulator;
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
@@ -52,10 +55,10 @@ public class DriveTrain extends SubsystemBase {
   
   public DriveTrain() {
     
-    m_leftDriveFront = new WPI_VictorSPX(RobotMap.MOTOR_LEFT_MASTER_ID );
-    m_leftDriveBack= new WPI_VictorSPX(RobotMap.MOTOR_LEFT_SLAVE_ID );
-    m_rightDriveFront= new WPI_VictorSPX(RobotMap.MOTOR_RIGHT_MASTER_ID );
-    m_rightDriveBack = new WPI_VictorSPX(RobotMap.MOTOR_RIGHT_SLAVE_ID );
+    m_leftDriveFront = new CANSparkMax(RobotMap.MOTOR_LEFT_MASTER_ID, MotorType.kBrushless);
+    m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
+    m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
+    m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless);
     
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
@@ -97,16 +100,16 @@ public class DriveTrain extends SubsystemBase {
   
   public void setBreakStatus(boolean breakOn){
     if (breakOn != breakStatus && breakOn == true){
-      m_leftDriveFront.setNeutralMode(NeutralMode.Brake);
-      m_leftDriveBack.setNeutralMode(NeutralMode.Brake);
-      m_rightDriveFront.setNeutralMode(NeutralMode.Brake);
-      m_rightDriveBack.setNeutralMode(NeutralMode.Brake);
+      m_leftDriveFront.setIdleMode(IdleMode.kBrake);
+      m_leftDriveBack.setIdleMode(IdleMode.kBrake);
+      m_rightDriveFront.setIdleMode(IdleMode.kBrake);
+      m_rightDriveBack.setIdleMode(IdleMode.kBrake);
     }
     else if(breakOn != breakStatus && breakOn == false){
-      m_leftDriveFront.setNeutralMode(NeutralMode.Coast);
-      m_leftDriveBack.setNeutralMode(NeutralMode.Coast);
-      m_rightDriveFront.setNeutralMode(NeutralMode.Coast);
-      m_rightDriveBack.setNeutralMode(NeutralMode.Coast);
+      m_leftDriveFront.setIdleMode(IdleMode.kCoast);
+      m_leftDriveBack.setIdleMode(IdleMode.kCoast);
+      m_rightDriveFront.setIdleMode(IdleMode.kCoast);
+      m_rightDriveBack.setIdleMode(IdleMode.kCoast);
     }
 
     
