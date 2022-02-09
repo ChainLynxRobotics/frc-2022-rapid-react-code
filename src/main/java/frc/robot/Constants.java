@@ -49,7 +49,7 @@ public final class Constants {
    public static final class SimulationConstants{
       // these are parameters that are necessary for simulating the drivetrain, more accurate numbers means the simulation is more accurate
 
-	   public static final DCMotor MOTOR_QUANTITY = DCMotor.getCIM(2); //we chave 2 CIM motors on each side of the robot
+	   public static final DCMotor MOTOR_QUANTITY = DCMotor.getNEO(2); //we chave 2 CIM motors on each side of the robot
       public static final double GEAR_RATIO = 5.85; // we have a gear ratio of 5.85:1
 	   public static final double MOMENT_OF_INERTIA = 5;// the units for this are kgm^2 and we currently do not have accurate numbers for them so if you need accurate numbers nag design team
       public static final double DRIVETRAIN_WEIGHT = 5.1; //weight of the drivetrain in kg
