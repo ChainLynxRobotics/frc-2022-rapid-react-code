@@ -56,7 +56,7 @@ dependencies {
     implementation wpi.java.vendor.java()
 
     // JitPack
-    implementation "net.thefletcher:SparkMaxSim-java:2022.1.1"
+    //implementation "net.thefletcher:SparkMaxSim-java:2022.1.1"
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
@@ -72,7 +72,7 @@ dependencies {
     nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
     simulationRelease wpi.sim.enableRelease()
 
-    //compile 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
+    implementation 'com.fazecast:jSerialComm:[2.0.0,3.0.0)'
 
     testImplementation 'junit:junit:4.12'
 }
