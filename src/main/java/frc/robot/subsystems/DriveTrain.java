@@ -42,7 +42,7 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup rightMotors;
   private DatumIMU datumIMU;
   private DatumIMU.DataPacket gyro;
-  
+  private DatumIMU.DataPacket accelerometer;
   private Boolean breakStatus;
   
   
@@ -69,7 +69,7 @@ public class DriveTrain extends SubsystemBase {
     m_rightDriveFront.getEncoder().setInverted(RobotMap.RIGHT_SIDE_INVERTED);
     datumIMU = new DatumIMU(RobotMap.GYRO_PORT);
     gyro =  datumIMU.getGyro();
-    
+    accelerometer = datumIMU.getAccelerometer();
     resetEncoders();
     //we might want to zero heading here if we can get that to work
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -108,9 +108,6 @@ public class DriveTrain extends SubsystemBase {
       m_rightDriveFront.setIdleMode(IdleMode.kCoast);
       m_rightDriveBack.setIdleMode(IdleMode.kCoast);
     }
-
-    
-
   }
 
       @Override
@@ -128,16 +125,7 @@ public class DriveTrain extends SubsystemBase {
         //  note, the code that these are using may involve a drive function that controls the speed of the motors using volts directly
         // also only important for simulation so only look at this if you are having issues with simulation results
       }
-     
-
-      
-      
-
-
     
-
-
-  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -149,6 +137,7 @@ public class DriveTrain extends SubsystemBase {
       fieldSim.setRobotPose(getPose());
       
     }
+    
   }
   
   /*
@@ -157,6 +146,7 @@ public class DriveTrain extends SubsystemBase {
     gyro.reset();
   }
   */
+
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     m_drivetrainSimulator.setPose(pose);
@@ -169,28 +159,31 @@ public class DriveTrain extends SubsystemBase {
     m_drive.arcadeDrive(-turn,throttle, true);
     
   }
+
   // this is necessary for a class in robot.java for the simulation
   // this is not important in any way outside of the simulation
   public double getDrawnCurrentAmps() {
     return m_drivetrainSimulator.getCurrentDrawAmps();
 
   }
+
   public double getAverageEncoderDistance() {
     return (m_leftDriveFront.getEncoder().getPosition() + m_rightDriveFront.getEncoder().getPosition()) / 2.0;
   }
+
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
+
   public void resetEncoders() {
     m_leftDriveFront.getEncoder().setPosition(0);
     m_rightDriveFront.getEncoder().setPosition(0);
   }
-  public double getHeading() {
 
-    
-    
-     return Math.IEEEremainder(gyro.z, 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
+  public double getHeading() {
+     return Math.IEEEremainder(gyro.z, 360);
   }
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
     return  new DifferentialDriveWheelSpeeds(m_leftDriveFront.getEncoder().getVelocity(), m_rightDriveFront.getEncoder().getVelocity());
   }
@@ -200,11 +193,9 @@ public class DriveTrain extends SubsystemBase {
     if (Math.max(Math.abs(leftVolts),Math.abs(rightVolts))> batteryVoltage ){
       leftVolts *= batteryVoltage /12.0;
       rightVolts *= batteryVoltage/ 12.0;
-
     }
     leftMotors.setVoltage(leftVolts);
     rightMotors.setVoltage(rightVolts);
     m_drive.feed();
-
   }
 }

@@ -3,6 +3,8 @@ package frc.robot;
 import com.fazecast.jSerialComm.*;
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.Timer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatumSerial {
 
@@ -13,12 +15,6 @@ public class DatumSerial {
     public DatumSerial(int baud, String port){
         usejSerialCommPort = true;
         try{
-            SerialPort[] ports = SerialPort.getCommPorts();
-            System.out.println("\nAvailable Ports:\n");
-            for (int i = 0; i < ports.length; ++i)
-                System.out.println(ports[i].getSystemPortName() + ": " + 
-                    ports[i].getDescriptivePortName() + ", " + ports[i].getPortDescription());
-
             jSerialCommPort = SerialPort.getCommPort(port);
             jSerialCommPort.setComPortParameters(baud, 8, 1, SerialPort.NO_PARITY);
             jSerialCommPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 100);
@@ -32,6 +28,31 @@ public class DatumSerial {
     public DatumSerial(int baud, Port port){
         usejSerialCommPort = false;
         wpiSerialPort = new edu.wpi.first.wpilibj.SerialPort(baud, port);
+    }
+
+    public DatumSerial(){
+    }
+
+    public List<String> getPorts(){
+
+        List<String> portNames = new ArrayList<>();
+        
+        if (usejSerialCommPort){            
+            SerialPort[] ports = SerialPort.getCommPorts();        
+            for (int i = 0; i < ports.length; ++i){                
+                /*System.out.println(ports[i].getSystemPortName() + 
+                    "\t" + ports[i].getDescriptivePortName() + 
+                    "\t" + ports[i].getPortDescription()); */
+                if (ports[i].getPortDescription().contains("datum")){
+                    portNames.add(ports[i].getSystemPortName());
+                }
+            }            
+        }
+        else {
+            portNames.add("kUSB1");
+            portNames.add("kUSB2");
+        }
+        return portNames;
     }
 
     public void close(){
@@ -110,19 +131,26 @@ public class DatumSerial {
         }
     }
 
-    public void sendCommand(String command){        
+    public String sendCommand(String command){        
+        String response = "";
         try {
             command = command + "\r\n";
             writeString(command);
 
             Timer.delay(0.05);
-            if (getResponse() == false){
-                System.out.print(command);
+            response = readString();
+            String[] lines = response.split(System.getProperty("line.separator"));
+            if (lines[0].contains("200 OK")){
+                return lines[1];
+            }
+            else {
+                System.out.print(response);
             }
         }
         catch (Exception ex) {
             System.out.println(ex);
         }
+        return response;
     }
 
     /* 
@@ -147,6 +175,7 @@ public class DatumSerial {
     public void	setWriteBufferSize​(int size){}
     */    
 } 
+
 
 
 

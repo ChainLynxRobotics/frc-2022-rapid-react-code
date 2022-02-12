@@ -42,12 +42,13 @@ public class RobotContainer {
   private static OI m_OI;
   private static Intake intake;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
-
+  private static SerialPorts serialPorts;
   public RobotContainer() {
     driveTrain = new DriveTrain();
     m_OI = new OI();
     intake = new Intake();
     robotArm = new RobotArm();
+    serialPorts = new SerialPorts();
     // Configure the button bindings
     startCommands();
     
