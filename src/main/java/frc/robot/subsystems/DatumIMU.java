@@ -126,7 +126,7 @@ public class DatumIMU extends SubsystemBase {
         gyro.z = datum.get("gyro").get("z").get(0).asDouble();
         return gyro;
     }
-
+    
     public DataPacket getMagnetometer(){
         DataPacket magnetometer = new DataPacket();
         magnetometer.t = datum.get("magnetometer").get("t").get(0).asDouble();

@@ -7,7 +7,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.ADIS16448_IMU;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry; // i am very upset about the amount of effort it took me to get this single stupid import to work i hate my life life is suffering and pain
@@ -29,7 +29,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.simulation.ADIS16448_IMUSim;
+
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 
@@ -40,15 +40,16 @@ public class DriveTrain extends SubsystemBase {
   public DifferentialDrivetrainSim m_drivetrainSimulator;
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
+  private DatumIMU datumIMU;
+  private DatumIMU.DataPacket gyro;
   
-  private final ADIS16448_IMU m_gyro;
   private Boolean breakStatus;
   
   
   private DifferentialDrive m_drive;
   
   private Field2d fieldSim;
-  private ADIS16448_IMUSim m_gyroSim;
+  
   private final DifferentialDriveOdometry m_odometry;
 
   
@@ -66,10 +67,11 @@ public class DriveTrain extends SubsystemBase {
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
     m_leftDriveFront.getEncoder().setInverted(RobotMap.LEFT_SIDE_INVERTED);
     m_rightDriveFront.getEncoder().setInverted(RobotMap.RIGHT_SIDE_INVERTED);
+    datumIMU = new DatumIMU(RobotMap.GYRO_PORT);
+    gyro =  datumIMU.getGyro();
     
-    
-    m_gyro = new ADIS16448_IMU();
     resetEncoders();
+    //we might want to zero heading here if we can get that to work
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     // this code basically assigns motor controllers to variables, then groups for the sides, then the drivetrain and assigns values to our encoders
     // also inverts the right side to make sure the motor moves straight
@@ -85,7 +87,7 @@ public class DriveTrain extends SubsystemBase {
             DriveConstants.TRACK_WIDTH,
             SimulationConstants.MEASUREMENT_NOISE);
       
-      m_gyroSim = new ADIS16448_IMUSim(m_gyro);
+      
       fieldSim = new Field2d();
       SmartDashboard.putData("Field", fieldSim);
           // to edit the values of this part of code edit the constants is Constants.java
@@ -122,7 +124,7 @@ public class DriveTrain extends SubsystemBase {
             rightMotors.get() * RobotController.getBatteryVoltage());
         m_drivetrainSimulator.update(0.020);
         
-        m_gyroSim.setGyroAngleZ(-m_drivetrainSimulator.getHeading().getDegrees());
+        //m_gyroSim.setGyroAngleZ(-m_drivetrainSimulator.getHeading().getDegrees());
         //  note, the code that these are using may involve a drive function that controls the speed of the motors using volts directly
         // also only important for simulation so only look at this if you are having issues with simulation results
       }
@@ -149,10 +151,12 @@ public class DriveTrain extends SubsystemBase {
     }
   }
   
-  
+  /*
+  //thankfully we do not need this class because i couldn't find a way to do it on mr myer gyro
   public void zeroHeading() {
-    m_gyro.reset();
+    gyro.reset();
   }
+  */
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     m_drivetrainSimulator.setPose(pose);
@@ -185,7 +189,7 @@ public class DriveTrain extends SubsystemBase {
 
     
     
-     return Math.IEEEremainder(m_gyro.getGyroAngleZ(), 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
+     return Math.IEEEremainder(gyro.z, 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
     return  new DifferentialDriveWheelSpeeds(m_leftDriveFront.getEncoder().getVelocity(), m_rightDriveFront.getEncoder().getVelocity());
