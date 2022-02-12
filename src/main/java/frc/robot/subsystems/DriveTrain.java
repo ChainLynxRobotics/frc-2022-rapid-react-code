@@ -4,7 +4,7 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.ADIS16448_IMU;
@@ -19,7 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.SimulationConstants;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
+
+
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -39,15 +40,13 @@ public class DriveTrain extends SubsystemBase {
   public DifferentialDrivetrainSim m_drivetrainSimulator;
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
-  private final Encoder m_leftEncoder;
-  private final Encoder m_rightEncoder;
+  
   private final ADIS16448_IMU m_gyro;
   private Boolean breakStatus;
   
   
   private DifferentialDrive m_drive;
-  private EncoderSim m_leftEncoderSim;
-  private EncoderSim m_rightEncoderSim;
+  
   private Field2d fieldSim;
   private ADIS16448_IMUSim m_gyroSim;
   private final DifferentialDriveOdometry m_odometry;
@@ -65,13 +64,10 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setInverted(RobotMap.RIGHT_SIDE_INVERTED);
     leftMotors.setInverted(RobotMap.LEFT_SIDE_INVERTED);
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
+    m_leftDriveFront.getEncoder().setInverted(RobotMap.LEFT_SIDE_INVERTED);
+    m_rightDriveFront.getEncoder().setInverted(RobotMap.RIGHT_SIDE_INVERTED);
     
-    m_leftEncoder = 
-    new Encoder(RobotMap.MOTOR_LEFT_MASTER_ID,RobotMap.MOTOR_LEFT_SLAVE_ID,RobotMap.LEFT_SIDE_INVERTED);
-    m_rightEncoder = 
-    new Encoder(RobotMap.MOTOR_RIGHT_MASTER_ID,RobotMap.MOTOR_RIGHT_SLAVE_ID,RobotMap.RIGHT_SIDE_INVERTED);
-    m_leftEncoder.setDistancePerPulse(DriveConstants.ENCODER_PULSE_DISTANCE);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.ENCODER_PULSE_DISTANCE);
+    
     m_gyro = new ADIS16448_IMU();
     resetEncoders();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -88,8 +84,7 @@ public class DriveTrain extends SubsystemBase {
             DriveConstants.WHEEL_RADIUS,
             DriveConstants.TRACK_WIDTH,
             SimulationConstants.MEASUREMENT_NOISE);
-      m_leftEncoderSim = new EncoderSim(m_leftEncoder);
-      m_rightEncoderSim = new EncoderSim(m_rightEncoder);
+      
       m_gyroSim = new ADIS16448_IMUSim(m_gyro);
       fieldSim = new Field2d();
       SmartDashboard.putData("Field", fieldSim);
@@ -126,10 +121,7 @@ public class DriveTrain extends SubsystemBase {
             -leftMotors.get() * RobotController.getBatteryVoltage(),
             rightMotors.get() * RobotController.getBatteryVoltage());
         m_drivetrainSimulator.update(0.020);
-        m_leftEncoderSim.setDistance(m_drivetrainSimulator.getLeftPositionMeters());
-        m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
-        m_rightEncoderSim.setDistance(m_drivetrainSimulator.getRightPositionMeters());
-        m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
+        
         m_gyroSim.setGyroAngleZ(-m_drivetrainSimulator.getHeading().getDegrees());
         //  note, the code that these are using may involve a drive function that controls the speed of the motors using volts directly
         // also only important for simulation so only look at this if you are having issues with simulation results
@@ -150,8 +142,8 @@ public class DriveTrain extends SubsystemBase {
     // if i remember correctly nothing has to be in here but i think it has something to do with the simulation so don't touch it for now
     if (RobotBase.isSimulation()) {  m_odometry.update(
           Rotation2d.fromDegrees(getHeading()),
-          m_leftEncoder.getDistance(),
-          m_rightEncoder.getDistance());
+          m_leftDriveFront.getEncoder().getPosition(),
+          m_rightDriveFront.getEncoder().getPosition());
       fieldSim.setRobotPose(getPose());
       
     }
@@ -180,14 +172,14 @@ public class DriveTrain extends SubsystemBase {
 
   }
   public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+    return (m_leftDriveFront.getEncoder().getPosition() + m_rightDriveFront.getEncoder().getPosition()) / 2.0;
   }
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
   public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    m_leftDriveFront.getEncoder().setPosition(0);
+    m_rightDriveFront.getEncoder().setPosition(0);
   }
   public double getHeading() {
 
@@ -196,7 +188,7 @@ public class DriveTrain extends SubsystemBase {
      return Math.IEEEremainder(m_gyro.getGyroAngleZ(), 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
   }
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return  new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+    return  new DifferentialDriveWheelSpeeds(m_leftDriveFront.getEncoder().getVelocity(), m_rightDriveFront.getEncoder().getVelocity());
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts){
