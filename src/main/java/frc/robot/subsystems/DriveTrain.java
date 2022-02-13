@@ -40,26 +40,19 @@ public class DriveTrain extends SubsystemBase {
   public DifferentialDrivetrainSim m_drivetrainSimulator;
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
-  private DatumIMU datumIMU;
-  private DatumIMU.DataPacket gyro;
-  private DatumIMU.DataPacket accelerometer;
+  
   private Boolean breakStatus;
-  
-  
   private DifferentialDrive m_drive;
-  
   private Field2d fieldSim;
-  
   private final DifferentialDriveOdometry m_odometry;
-
+  private DatumGyro gyro;
   
   public DriveTrain() {
     
     m_leftDriveFront = new CANSparkMax(RobotMap.MOTOR_LEFT_MASTER_ID, MotorType.kBrushless);
     m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
     m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
-    m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless);
-    
+    m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless); 
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
     rightMotors.setInverted(RobotMap.RIGHT_SIDE_INVERTED);
@@ -67,10 +60,10 @@ public class DriveTrain extends SubsystemBase {
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
     m_leftDriveFront.getEncoder().setInverted(RobotMap.LEFT_SIDE_INVERTED);
     m_rightDriveFront.getEncoder().setInverted(RobotMap.RIGHT_SIDE_INVERTED);
-    datumIMU = new DatumIMU(RobotMap.GYRO_PORT);
-    gyro =  datumIMU.getGyro();
-    accelerometer = datumIMU.getAccelerometer();
+   
+    
     resetEncoders();
+    gyro =  new DatumGyro(RobotMap.GYRO_PORT);
     //we might want to zero heading here if we can get that to work
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     // this code basically assigns motor controllers to variables, then groups for the sides, then the drivetrain and assigns values to our encoders
@@ -137,7 +130,7 @@ public class DriveTrain extends SubsystemBase {
       fieldSim.setRobotPose(getPose());
       
     }
-    
+
   }
   
   /*
@@ -181,7 +174,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getHeading() {
-     return Math.IEEEremainder(gyro.z, 360);
+     return Math.IEEEremainder(gyro.getAngle(), 360);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){

@@ -39,7 +39,8 @@ public final class Constants {
 
         public static final int JOYSTICK_PORT1 = 0;
 	     public static final int JOYSTICK_PORT2 = 1;
-        public static final int INTAKE_MOTOR_ID = 5;
+        public static final int INTAKE_MOTOR_ID = 6;
+        public static final int ROBOT_ARM_MOTOR_ID = 5;
         public static final String GYRO_PORT = null;
 
 

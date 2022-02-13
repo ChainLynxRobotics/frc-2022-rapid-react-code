@@ -4,22 +4,39 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap;
 
 public class RobotArm extends SubsystemBase {
   /** Creates a new robotArm. */
-  private DoubleSolenoid pneumaticArm;
+  private CANSparkMax armMotor;
   private boolean lastInput;
+  private boolean raised;
+
+  /*private double upperAngle;
+  private double lowerAngle;*/
+
   public RobotArm() {
-    DoubleSolenoid pneumaticArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.ROBOT_ARM_SOLENOIDS[0], RobotMap.ROBOT_ARM_SOLENOIDS[1]);
-    pneumaticArm.set(DoubleSolenoid.Value.kReverse);
+    armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
+    armMotor.setIdleMode(IdleMode.kCoast);
+    
   }
-  public void toggleHeight(boolean inputStatus){
+  
+  public void toggleArm(boolean inputStatus){
     if(inputStatus != lastInput && inputStatus == true ){
-      pneumaticArm.toggle();
+      try {
+        if (raised) {
+          lowerArm();
+        }else{
+          raiseArm();
+        }
+      } catch (InterruptedException e) {
+        System.out.println(e);
+      }
     }
     else if(inputStatus != lastInput){
       lastInput = inputStatus;
@@ -27,5 +44,17 @@ public class RobotArm extends SubsystemBase {
 
   }
 
+  public void raiseArm() throws InterruptedException{
+    
+    armMotor.set(1);
+    while(armMotor.getEncoder().getVelocity() > 0){}
+    armMotor.setIdleMode(IdleMode.kBrake);
+    armMotor.set(0);
+    raised = true;
+  }
+
+  public void lowerArm() throws InterruptedException {
+    armMotor.setIdleMode(IdleMode.kCoast);
+  }
   
 }

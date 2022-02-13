@@ -58,7 +58,7 @@ public class RobotContainer {
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
     intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorStickButton(2)),intake));
-    robotArm.setDefaultCommand(new RunCommand(() ->robotArm.toggleHeight(m_OI.getOperatorStickButton(1)), robotArm));
+    robotArm.setDefaultCommand(new RunCommand(() ->robotArm.toggleArm(m_OI.getOperatorStickButton(1)), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
