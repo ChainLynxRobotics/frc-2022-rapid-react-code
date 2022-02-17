@@ -45,7 +45,7 @@ public class DriveTrain extends SubsystemBase {
   private DifferentialDrive m_drive;
   private Field2d fieldSim;
   private final DifferentialDriveOdometry m_odometry;
-  private DatumGyro gyro;
+  
   
   public DriveTrain() {
     
@@ -63,7 +63,7 @@ public class DriveTrain extends SubsystemBase {
    
     
     resetEncoders();
-    gyro =  new DatumGyro(RobotMap.GYRO_PORT);
+    
     //we might want to zero heading here if we can get that to work
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     // this code basically assigns motor controllers to variables, then groups for the sides, then the drivetrain and assigns values to our encoders
@@ -174,7 +174,15 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getHeading() {
-     return Math.IEEEremainder(gyro.getAngle(), 360);
+    double cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (m_leftDriveFront.getEncoder().getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
+    double degreesPerTick = cmPerTick / (DriveConstants.WHEEL_RADIUS * 100) * (180 * Math.PI);
+    // multiplied by 100 to get in CM
+    double encoderDifference = m_leftDriveFront.getEncoder().getPosition() - m_rightDriveFront.getEncoder().getPosition();
+    double turningValue = encoderDifference * degreesPerTick;
+    System.out.println(encoderDifference);
+    System.out.println(turningValue);
+    return (turningValue % 360) * -1;
+    
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){

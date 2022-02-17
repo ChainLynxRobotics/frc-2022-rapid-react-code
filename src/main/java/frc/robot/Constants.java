@@ -72,9 +72,9 @@ public final class Constants {
       
       public static final double WHEEL_RADIUS = Units.inchesToMeters(3); //our wheels have a radius of 3 inches
       public static final double WHEEL_CIRCUMFERENCE = WHEEL_RADIUS * 2 * Math.PI;
-      public static final double ENCODER_PPR = 2048;
-      public static final double ENCODER_CPR = ENCODER_PPR * 4; // this is just a placeholder value; value subject to change
-      public static final double ENCODER_PULSE_DISTANCE = (WHEEL_RADIUS * Math.PI / ENCODER_CPR);
+      public static final double ENCODER_PULSE_DISTANCE (int ENCODER_CPR){
+         return (WHEEL_RADIUS * Math.PI)/ ENCODER_CPR; 
+      }
       public static final double TRACK_WIDTH = .58; // there are .58 meters between the left and right wheels
       public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
       public static final double AUTO_VOLTAGE_CONSTRAINT = 7;
