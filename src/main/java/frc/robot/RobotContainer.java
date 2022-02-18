@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SimulationConstants;
 import frc.robot.subsystems.DriveTrain;
@@ -41,6 +43,7 @@ public class RobotContainer {
   private static DriveTrain driveTrain;
   private static OI m_OI;
   private static Intake intake;
+  private static JoystickButton operatorTrigger;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
   
   public RobotContainer() {
@@ -50,15 +53,25 @@ public class RobotContainer {
     robotArm = new RobotArm();
     
     // Configure the button bindings
+    configureButtons();
+    // start commands
     startCommands();
     
   
     }
+  private void configureButtons() {
+    // configure the arm's toggle
+    operatorTrigger= new JoystickButton(m_OI.getOperatorStick(), 2);
+    // you can add a boolean to turn the command off if you want it to be overridden and turned off (ie for auto)
+    operatorTrigger.toggleWhenActive(new StartEndCommand(robotArm::raiseArm, robotArm::lowerArm, robotArm));
+    
+
+  }
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
-    intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorStickButton(2)),intake));
-    robotArm.setDefaultCommand(new RunCommand(() ->robotArm.toggleArm(m_OI.getOperatorStickButton(1)), robotArm));
+    intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorStick().getRawButton(2)),intake));
+    
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
@@ -81,6 +94,7 @@ public class RobotContainer {
   public DriveTrain getRobotDrive() {
     return driveTrain;
   }
+  
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     /*

@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N7;
 
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -21,29 +22,24 @@ import edu.wpi.first.math.numbers.N7;
  */
 public final class Constants {
    public static final class RobotMap{
-        
-    
 
-    
         //these ID's are accurate to the old robot, not the 2022 robot
 
-
-        public static final int MOTOR_LEFT_MASTER_ID = 1; //motor port values are the same as encoder port values
-        public static final int MOTOR_LEFT_SLAVE_ID = 2;
-        public static final int MOTOR_RIGHT_MASTER_ID = 4;
-        public static final int MOTOR_RIGHT_SLAVE_ID = 3;
-        public static final boolean LEFT_SIDE_INVERTED = false;
-        public static final boolean RIGHT_SIDE_INVERTED = true;
-        public static final int[] ROBOT_ARM_SOLENOIDS = {0,1};
-        // joystick port, may change if there is a mouse or something plugged in, be careful about that
-
-        public static final int JOYSTICK_PORT1 = 0;
-	     public static final int JOYSTICK_PORT2 = 1;
-        public static final int INTAKE_MOTOR_ID = 6;
-        public static final int ROBOT_ARM_MOTOR_ID = 5;
-        public static final String GYRO_PORT = null;
-
-
+      
+      public static final int MOTOR_LEFT_MASTER_ID = 1; //motor port values are the same as encoder port values
+      public static final int MOTOR_LEFT_SLAVE_ID = 2;
+      public static final int MOTOR_RIGHT_MASTER_ID = 4;
+      public static final int MOTOR_RIGHT_SLAVE_ID = 3;
+      public static final boolean LEFT_SIDE_INVERTED = false;
+      public static final boolean RIGHT_SIDE_INVERTED = true;
+      public static final int[] ROBOT_ARM_SOLENOIDS = {0,1};
+      // joystick port, may change if there is a mouse or something plugged in, be careful about that
+      public static final int JOYSTICK_PORT1 = 0;
+	   public static final int JOYSTICK_PORT2 = 1;
+      public static final int INTAKE_MOTOR_ID = 6;
+      public static final int ROBOT_ARM_MOTOR_ID = 5;
+      public static final String GYRO_PORT = null;
+        
 
 
 
@@ -62,14 +58,14 @@ public final class Constants {
       
       
       public static final boolean SIM_GYRO_INVERTED = true; // this is here because i am not sure if we will get a real gyro or what will happen to any gyro in the simulation
-    public static final double VOLTS_SCNDS_SQUARED_PER_METER = .2;
-    public static final double VOLTS_SCNDS_PER_METER = 1.98;
-    public static final double VOLTS = .22;
+      public static final double VOLTS_SCNDS_SQUARED_PER_METER = .2;
+      public static final double VOLTS_SCNDS_PER_METER = 1.98;
+      public static final double VOLTS = .22;
 
 
    }
    public static final class DriveConstants{
-      
+
       public static final double WHEEL_RADIUS = Units.inchesToMeters(3); //our wheels have a radius of 3 inches
       public static final double WHEEL_CIRCUMFERENCE = WHEEL_RADIUS * 2 * Math.PI;
       public static final double ENCODER_PULSE_DISTANCE (int ENCODER_CPR){
@@ -80,12 +76,5 @@ public final class Constants {
       public static final double AUTO_VOLTAGE_CONSTRAINT = 7;
       public static final double AUTO_DRIVE_SPEED = 0;
 
-
    } 
-
-
-
-
-
-
 }

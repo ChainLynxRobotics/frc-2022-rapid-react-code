@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -40,7 +41,6 @@ public class DriveTrain extends SubsystemBase {
   public DifferentialDrivetrainSim m_drivetrainSimulator;
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
-  
   private Boolean breakStatus;
   private DifferentialDrive m_drive;
   private Field2d fieldSim;

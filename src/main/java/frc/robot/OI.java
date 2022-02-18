@@ -8,23 +8,31 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 
 import frc.robot.Constants.RobotMap;
+
 // ask whoever the operator ends up being what button they want the intake to be
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
     
+    
+    
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
         return driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
     }
-    public boolean getOperatorStickButton(int button){
-        return operatorStick.getRawButton(button);
-    }
+    
     public double getOperatorStickAxis(int axis){
         return operatorStick.getRawAxis(axis);
     }
     public int getDriveStickSliderAxis(){
         return driveStick.getAxisCount() -1;
+    }
+    // this is the code of a broken programmer
+    public GenericHID getOperatorStick(){
+        return operatorStick;
+    }
+    public GenericHID getDriveStick(){
+        return driveStick;
     }
   
 }

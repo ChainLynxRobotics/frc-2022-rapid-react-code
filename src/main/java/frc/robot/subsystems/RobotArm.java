@@ -26,25 +26,11 @@ public class RobotArm extends SubsystemBase {
     
   }
   
-  public void toggleArm(boolean inputStatus){
-    if(inputStatus != lastInput && inputStatus == true ){
-      try {
-        if (raised) {
-          lowerArm();
-        }else{
-          raiseArm();
-        }
-      } catch (InterruptedException e) {
-        System.out.println(e);
-      }
-    }
-    else if(inputStatus != lastInput){
-      lastInput = inputStatus;
-    }
+  
 
-  }
+  
 
-  public void raiseArm() throws InterruptedException{
+  public void raiseArm() {
     
     armMotor.set(1);
     while(armMotor.getEncoder().getVelocity() > 0){}
@@ -53,7 +39,7 @@ public class RobotArm extends SubsystemBase {
     raised = true;
   }
 
-  public void lowerArm() throws InterruptedException {
+  public void lowerArm()  {
     armMotor.setIdleMode(IdleMode.kCoast);
   }
   
