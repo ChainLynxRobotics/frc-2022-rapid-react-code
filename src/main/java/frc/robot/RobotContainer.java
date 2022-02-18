@@ -78,12 +78,9 @@ public class RobotContainer {
     // this makes the z axis slider go from 0->1 instead of -1->1
     double driveMultiplier = ((-m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
     // this codes to have the robot break when the scaler sets the speed to 0
-    if(driveMultiplier == 0){
-      driveTrain.setBreakStatus(true);
-    }
-    else{
-      driveTrain.setBreakStatus(false);
-    }
+    
+    driveTrain.setBreakStatus(driveMultiplier == 0);
+
     return driveMultiplier;
   }
   /**

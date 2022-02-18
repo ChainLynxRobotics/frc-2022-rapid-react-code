@@ -14,15 +14,13 @@ import frc.robot.Constants.RobotMap;
 public class RobotArm extends SubsystemBase {
   /** Creates a new robotArm. */
   private CANSparkMax armMotor;
-  private boolean lastInput;
-  private boolean raised;
-
+  
   /*private double upperAngle;
   private double lowerAngle;*/
 
   public RobotArm() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
-    armMotor.setIdleMode(IdleMode.kCoast);
+    armMotor.setIdleMode(IdleMode.kBrake);
     
   }
   
@@ -32,11 +30,11 @@ public class RobotArm extends SubsystemBase {
 
   public void raiseArm() {
     
-    armMotor.set(1);
+    armMotor.set(.05);
     while(armMotor.getEncoder().getVelocity() > 0){}
     armMotor.setIdleMode(IdleMode.kBrake);
     armMotor.set(0);
-    raised = true;
+    
   }
 
   public void lowerArm()  {
