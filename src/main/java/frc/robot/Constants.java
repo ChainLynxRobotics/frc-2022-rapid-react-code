@@ -32,13 +32,13 @@ public final class Constants {
       public static final int MOTOR_RIGHT_SLAVE_ID = 3;
       public static final boolean LEFT_SIDE_INVERTED = false;
       public static final boolean RIGHT_SIDE_INVERTED = true;
-      public static final int[] ROBOT_ARM_SOLENOIDS = {0,1};
+      
       // joystick port, may change if there is a mouse or something plugged in, be careful about that
       public static final int JOYSTICK_PORT1 = 0;
 	   public static final int JOYSTICK_PORT2 = 1;
-      public static final int INTAKE_MOTOR_ID = 6;
+      public static final int BALLHANDLER_MOTOR_ID = 6;
       public static final int ROBOT_ARM_MOTOR_ID = 5;
-      public static final String GYRO_PORT = null;
+      
         
 
 
@@ -48,7 +48,7 @@ public final class Constants {
       // these are parameters that are necessary for simulating the drivetrain, more accurate numbers means the simulation is more accurate
 
 	   public static final DCMotor MOTOR_QUANTITY = DCMotor.getNEO(2); //we chave 2 NEO motors on each side of the robot
-      public static final double GEAR_RATIO = 5.85; // we have a gear ratio of 5.85:1
+      public static final double GEAR_RATIO = 10.71; // we have a gear ratio of 5.85:1
 	   public static final double MOMENT_OF_INERTIA = 5;// the units for this are kgm^2 and we currently do not have accurate numbers for them so if you need accurate numbers nag design team
       public static final double DRIVETRAIN_WEIGHT = 5.1; //weight of the drivetrain in kg
 	   
@@ -71,7 +71,7 @@ public final class Constants {
       public static final double ENCODER_PULSE_DISTANCE (int ENCODER_CPR){
          return (WHEEL_RADIUS * Math.PI)/ ENCODER_CPR; 
       }
-      public static final double TRACK_WIDTH = .58; // there are .58 meters between the left and right wheels
+      public static final double TRACK_WIDTH = Units.inchesToMeters(33); // there are .58 meters between the left and right wheels
       public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
       public static final double AUTO_VOLTAGE_CONSTRAINT = 7;
       public static final double AUTO_DRIVE_SPEED = 0;

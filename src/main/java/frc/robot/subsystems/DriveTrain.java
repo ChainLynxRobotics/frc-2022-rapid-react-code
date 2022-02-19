@@ -45,7 +45,7 @@ public class DriveTrain extends SubsystemBase {
   private DifferentialDrive m_drive;
   private Field2d fieldSim;
   private final DifferentialDriveOdometry m_odometry;
-  
+  private double cmPerTick;
   
   public DriveTrain() {
     
@@ -58,12 +58,12 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setInverted(RobotMap.RIGHT_SIDE_INVERTED);
     leftMotors.setInverted(RobotMap.LEFT_SIDE_INVERTED);
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
-    m_leftDriveFront.getEncoder().setInverted(RobotMap.LEFT_SIDE_INVERTED);
-    m_rightDriveFront.getEncoder().setInverted(RobotMap.RIGHT_SIDE_INVERTED);
+    breakStatus = false;
    
     
     resetEncoders();
-    
+    fieldSim = new Field2d();
+    SmartDashboard.putData("status/fieldlocation", fieldSim);
     //we might want to zero heading here if we can get that to work
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     // this code basically assigns motor controllers to variables, then groups for the sides, then the drivetrain and assigns values to our encoders
@@ -130,7 +130,9 @@ public class DriveTrain extends SubsystemBase {
       fieldSim.setRobotPose(getPose());
       
     }
-
+    getHeading();
+    SmartDashboard.putNumber("status/robotspeedinmeterspersecond", DriveConstants.WHEEL_CIRCUMFERENCE/(m_leftDriveFront.getEncoder().getCountsPerRevolution() *4)); // displays speed in meters per second
+    SmartDashboard.putData("status/drivetraindata", m_drive);
   }
   
   /*
@@ -174,14 +176,16 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getHeading() {
-    double cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (m_leftDriveFront.getEncoder().getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
+    cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (m_leftDriveFront.getEncoder().getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
     double degreesPerTick = cmPerTick / (DriveConstants.WHEEL_RADIUS * 100) * (180 * Math.PI);
     // multiplied by 100 to get in CM
     double encoderDifference = m_leftDriveFront.getEncoder().getPosition() - m_rightDriveFront.getEncoder().getPosition();
     double turningValue = encoderDifference * degreesPerTick;
     System.out.println(encoderDifference);
     System.out.println(turningValue);
-    return (turningValue % 360) * -1;
+    double finalDegrees= (turningValue % 360) * -1;
+    SmartDashboard.putNumber("status/robotheading", finalDegrees);
+    return finalDegrees;
     
   }
 
