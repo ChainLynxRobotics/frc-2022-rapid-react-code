@@ -21,17 +21,20 @@ public class BallHandler extends SubsystemBase {
   }
 
       
-  public void ballHandlerRunning(double inputSpeed, boolean ballHandlerOn){
-    if(ballHandlerOn == false){
+  public void ballHandlerRunning(double inputSpeed, boolean ballHandlerOff){
+    if(ballHandlerOff == true){
       ballHandlerMotor.set(0);
     } 
     else if( inputSpeed > 0.05 ){
       ballHandlerMotor.set(-1);
     }
-    else{
+    else if (inputSpeed < -0.05){
       ballHandlerMotor.set(1);
     }
-    SmartDashboard.putBoolean("status/ballHandlerOn", ballHandlerOn);
+    else{
+      ballHandlerMotor.set(0);
+    }
+    SmartDashboard.putBoolean("status/ballHandlerOn", ballHandlerOff);
   }
 
 }

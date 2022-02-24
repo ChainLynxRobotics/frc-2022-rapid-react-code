@@ -13,19 +13,19 @@ import frc.robot.Constants.RobotMap;
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
-    private JoystickButton operatorButton2 = new JoystickButton(operatorStick, 1);
+    private JoystickButton operatorButton2 = new JoystickButton(operatorStick, 2);
     
     
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
-        return driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
+        return -driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
     }
     
     public double getOperatorStickAxis(int axis){
         return operatorStick.getRawAxis(axis);
     }
     public int getDriveStickSliderAxis(){
-        return driveStick.getAxisCount() -1;
+        return driveStick.getAxisCount() ;
     }
     // this is the code of a broken programmer
     public JoystickButton getOperatorButton2(){

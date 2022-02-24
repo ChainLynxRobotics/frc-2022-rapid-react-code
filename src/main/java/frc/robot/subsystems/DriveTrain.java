@@ -55,8 +55,6 @@ public class DriveTrain extends SubsystemBase {
     m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless); 
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
-    rightMotors.setInverted(RobotMap.RIGHT_SIDE_INVERTED);
-    leftMotors.setInverted(RobotMap.LEFT_SIDE_INVERTED);
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
     breakStatus = false;
    
@@ -181,9 +179,9 @@ public class DriveTrain extends SubsystemBase {
     // multiplied by 100 to get in CM
     double encoderDifference = m_leftDriveFront.getEncoder().getPosition() - m_rightDriveFront.getEncoder().getPosition();
     double turningValue = encoderDifference * degreesPerTick;
-    System.out.println(encoderDifference);
-    System.out.println(turningValue);
+    
     double finalDegrees= (turningValue % 360) * -1;
+    System.out.println("the heading of the robot is" + finalDegrees);
     SmartDashboard.putNumber("status/robotheading", finalDegrees);
     return finalDegrees;
     

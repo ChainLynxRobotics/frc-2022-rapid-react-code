@@ -22,23 +22,34 @@ public class RobotArm extends SubsystemBase {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
     
+    
   }
   
   
 
-  
+  @Override
+  public void periodic() {
+      System.out.println("arm encoder position" + armMotor.getEncoder().getPosition());
+  }
 
   public void raiseArm() {
     
-    armMotor.set(.05);
-    while(armMotor.getEncoder().getVelocity() > 0){}
-    armMotor.setIdleMode(IdleMode.kBrake);
-    armMotor.set(0);
+    armMotor.set(.1);
     
   }
 
   public void lowerArm()  {
-    armMotor.setIdleMode(IdleMode.kCoast);
+    armMotor.set(-.1);
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      System.out.println("arm wait didn't work");
+    }
+    while(armMotor.getEncoder().getVelocity() < 0){
+      //System.out.println("armlowering");
+    }
+    armMotor.set(0);
+    
   }
   
 }

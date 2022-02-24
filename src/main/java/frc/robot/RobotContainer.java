@@ -76,7 +76,7 @@ public class RobotContainer {
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
     // this makes the z axis slider go from 0->1 instead of -1->1
-    double driveMultiplier = ((-m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
+    double driveMultiplier = ((m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
     // this codes to have the robot break when the scaler sets the speed to 0
     driveMultiplier = m_OI.getDriverButton(14)?0:driveMultiplier;
     
@@ -84,10 +84,10 @@ public class RobotContainer {
     
     driveMultiplier =  m_OI.getDriverButton(1)?-1:driveMultiplier;
     robotReversed= m_OI.getDriverButton(1);// this is ugly and bad code: it works
-
+    System.out.println("the multiplier of the robots speed is" + driveMultiplier);
     SmartDashboard.putBoolean("status/robottReversed", robotReversed);
     SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
-    SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier()); // i am sorry this was genuinely the easiest solution i could come up with
+    SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*driveMultiplier:m_OI.getDriveStickRawAxis(0)*driveMultiplier); // i am sorry this was genuinely the easiest solution i could come up with
     return driveMultiplier;
   }
   /**

@@ -26,10 +26,10 @@ public final class Constants {
         //these ID's are accurate to the old robot, not the 2022 robot
 
       
-      public static final int MOTOR_LEFT_MASTER_ID = 1; //motor port values are the same as encoder port values
-      public static final int MOTOR_LEFT_SLAVE_ID = 2;
-      public static final int MOTOR_RIGHT_MASTER_ID = 4;
-      public static final int MOTOR_RIGHT_SLAVE_ID = 3;
+      public static final int MOTOR_LEFT_MASTER_ID = 2; //motor port values are the same as encoder port values
+      public static final int MOTOR_LEFT_SLAVE_ID = 1;
+      public static final int MOTOR_RIGHT_MASTER_ID = 3;
+      public static final int MOTOR_RIGHT_SLAVE_ID = 4;
       public static final boolean LEFT_SIDE_INVERTED = false;
       public static final boolean RIGHT_SIDE_INVERTED = true;
       
