@@ -172,7 +172,7 @@ public class RobotContainer {
        DriveConstants.DRIVE_KINEMATICS, DriveConstants.AUTO_VOLTAGE_CONSTRAINT);
     */
     // VERY IMPORTANT MAKE SURE TO UPDATE THIS DIRECTORY WHEN YOU RUN THIS CODE TO MATCH YOUR OWN FOLDER OR THE CODE WILL NOT WORK
-    String trajectoryJSON = "C:\\Users\\ChainLynx\\Documents\\frc-2022-rapid-react-code\\PathWeaver\\output\\3pointspath.wpilib.json";
+    String trajectoryJSON = "C:\\Users\\timwa\\Documents\\GitHub\\frc-2022-rapid-react-code\\PathWeaver\\Paths\\3pointspath.path";
     Trajectory pathWeaverTrajectory = new Trajectory();
     try{
       Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
