@@ -8,25 +8,43 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 
 import frc.robot.Constants.RobotMap;
+
 // ask whoever the operator ends up being what button they want the intake to be
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
+    private boolean operatorButton2LastValue = false; 
+    
     
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
-        return driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
+        return -driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
     }
-    public boolean getOperatorStickButton(int button){
-        return operatorStick.getRawButton(button);
-    }
+    
     public double getOperatorStickAxis(int axis){
         return operatorStick.getRawAxis(axis);
     }
     public int getDriveStickSliderAxis(){
-        return driveStick.getAxisCount() -1;
+        return driveStick.getAxisCount() ;
     }
-  
+    // i hate everything about this piece of code but i am not going to declare classwide variables for every button so i will just cry
+    public boolean getOperatorButton2Toggle(){
+        if(operatorStick.getRawButtonPressed(2)){
+            if(operatorButton2LastValue){
+                operatorButton2LastValue= false;
+            } 
+            else{
+                operatorButton2LastValue= true;
+            }
+        }
+        return operatorButton2LastValue;
+    }
+    public boolean getOperatorButton(int button){
+        return operatorStick.getRawButton(button);
+    }
+    public boolean getDriverButton(int button){
+        return driveStick.getRawButton(button);
+    }
 }
 
 

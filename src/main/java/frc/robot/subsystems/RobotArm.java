@@ -4,28 +4,52 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap;
 
 public class RobotArm extends SubsystemBase {
   /** Creates a new robotArm. */
-  private DoubleSolenoid pneumaticArm;
-  private boolean lastInput;
+  private CANSparkMax armMotor;
+  
+  /*private double upperAngle;
+  private double lowerAngle;*/
+
   public RobotArm() {
-    DoubleSolenoid pneumaticArm = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, RobotMap.ROBOT_ARM_SOLENOIDS[0], RobotMap.ROBOT_ARM_SOLENOIDS[1]);
-    pneumaticArm.set(DoubleSolenoid.Value.kReverse);
+    armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
+    armMotor.setIdleMode(IdleMode.kBrake);
+    
+    
   }
-  public void toggleHeight(boolean inputStatus){
-    if(inputStatus != lastInput && inputStatus == true ){
-      pneumaticArm.toggle();
-    }
-    else if(inputStatus != lastInput){
-      lastInput = inputStatus;
-    }
+  
+  
 
+  @Override
+  public void periodic() {
+      System.out.println("arm encoder position" + armMotor.getEncoder().getPosition());
   }
 
+  public void raiseArm() {
+    
+    armMotor.set(.1);
+    
+  }
+
+  public void lowerArm()  {
+    armMotor.set(-.1);
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      System.out.println("arm wait didn't work");
+    }
+    while(armMotor.getEncoder().getVelocity() < 0){
+      //System.out.println("armlowering");
+    }
+    armMotor.set(0);
+    
+  }
   
 }

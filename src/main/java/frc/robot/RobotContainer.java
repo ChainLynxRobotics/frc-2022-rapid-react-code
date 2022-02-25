@@ -11,6 +11,7 @@ package frc.robot;
 import java.io.IOException;
 import java.nio.file.Path;
 
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -19,14 +20,19 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 // import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint; //pathweaver has this so we dont need to use this
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+
+
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SimulationConstants;
+import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Intake;
+
 import frc.robot.subsystems.RobotArm;
 
 /**
@@ -40,38 +46,74 @@ public class RobotContainer {
   private static RobotArm robotArm;
   private static DriveTrain driveTrain;
   private static OI m_OI;
-  private static Intake intake;
+  private static BallHandler ballHandler;
+  private static boolean robotReversed;
+  private static ConditionalCommand robotArmController;
+  private static Timer autoTimer;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
-
+  
   public RobotContainer() {
     driveTrain = new DriveTrain();
     m_OI = new OI();
-    intake = new Intake();
+    ballHandler = new BallHandler();
     robotArm = new RobotArm();
+    // i spent 2 hours before i realized i just needed to type new ffs me
+    
     // Configure the button bindings
+    
+    // start commands
     startCommands();
     
   
     }
+  
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
-    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
-    intake.setDefaultCommand(new RunCommand(() -> intake.intakeRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorStickButton(2)),intake));
-    robotArm.setDefaultCommand(new RunCommand(() ->robotArm.toggleHeight(m_OI.getOperatorStickButton(1)), robotArm));
+    robotArmController= new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> m_OI.getOperatorButton2Toggle());
+    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
+    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorButton(1)),ballHandler));
+    robotArm.setDefaultCommand(robotArmController);
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
     // this makes the z axis slider go from 0->1 instead of -1->1
-    double driveMultiplier = ((-m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
+    double driveMultiplier = ((m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
     // this codes to have the robot break when the scaler sets the speed to 0
-    if(driveMultiplier == 0){
-      driveTrain.setBreakStatus(true);
-    }
-    else{
-      driveTrain.setBreakStatus(false);
-    }
+    driveMultiplier = m_OI.getDriverButton(14)?0:driveMultiplier;
+    
+    driveTrain.setBreakStatus(driveMultiplier == 0);
+    
+    driveMultiplier =  m_OI.getDriverButton(1)?-1:driveMultiplier;
+    robotReversed= m_OI.getDriverButton(1);// this is ugly and bad code: it works
+    driveMultiplier *= .84;
+    System.out.println("the multiplier of the robots speed is" + driveMultiplier);
+    SmartDashboard.putBoolean("status/robottReversed", robotReversed);
+    SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
+    SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*driveMultiplier:m_OI.getDriveStickRawAxis(0)*driveMultiplier); // i am sorry this was genuinely the easiest solution i could come up with
     return driveMultiplier;
   }
+  // note this probs wont be an error at competitions but for repeated auto testing we may want to check for null and reset the timers here, auto only works once per robot boot
+  public void onAutoInit(){
+    autoTimer= new Timer();
+    autoTimer.start();
+  }
+  private boolean autoArmTimer(){
+    if(autoTimer.get()<=4){
+      return false;
+    }
+    return true;
+  }
+  private double autoBallHandleTimer(){
+    if(autoTimer.get()<=4){
+      return -1;
+    }
+    else if(autoTimer.get()>=9){
+      return 1;
+    }
+    return 0;
+  }
+  // also note this auto code is uncalibrated and for the optimistic solution, ie commit to main, will have a more realistic branch of shoot then leave tarmak for rest of options
+  
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -80,7 +122,8 @@ public class RobotContainer {
   public DriveTrain getRobotDrive() {
     return driveTrain;
   }
-  public Command getAutonomousCommand() {
+  
+  public Command getAutonomousDriveCommand() {
     // An ExampleCommand will run in autonomous
     /*
     var autoVoltageConstraint = 
@@ -116,6 +159,13 @@ public class RobotContainer {
     return autoCommand.andThen(() -> driveTrain.tankDriveVolts(0, 0));
     
   }
+public Command getAuntonomousArmCommand() {
+    
+  return new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> autoArmTimer()) ;
+}
+public Command getAuntonousBallHandlerCommand() {
+    return new RunCommand(() -> ballHandler.ballHandlerRunning(autoBallHandleTimer(), false), ballHandler);
+}
   
 }
 

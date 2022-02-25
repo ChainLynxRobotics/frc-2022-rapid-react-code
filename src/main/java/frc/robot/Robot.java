@@ -23,8 +23,12 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 // when i was coding this class, i couldn't get robot container to work right so i decided to just not use it at least for this model
 // big note, this code can support simulation BUT it lacks odometry and i haven't accounted for encoders yet, because they are not on our robot
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  
   private RobotContainer robotContainer;
+  // for each of the commands, handle timing seperately, and have it all add up, if it works that way i also might have some commands trigger other commands
+  private Command autonomousDriveCommand;
+  private Command autonomousArmCommand;
+  private Command autonomousBallHandlerCommand;
   // the subsystems are declared here, and not in robotInit as you would assume to workaround the 
   //fact that simulation periodic actucally runs BEFORE robotInit 
   //so i had to declare them here to avoid a null pointer error
@@ -37,8 +41,6 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotInit() {
-    // i did not code for the smart dashboard and also didn't code any autonomous code so i only have the drive command in here
-    //in the future this should be moved to teleop init, likely in a command form
     robotContainer = new RobotContainer();
     
     setNetworkTablesFlushEnabled(true);
@@ -88,12 +90,14 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override // when we add autonomous code we should initialize it here
   public void autonomousInit() { 
-    m_autonomousCommand = robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    autonomousDriveCommand = robotContainer.getAutonomousDriveCommand();
+    autonomousArmCommand = robotContainer.getAuntonomousArmCommand();
+    autonomousBallHandlerCommand= robotContainer.getAuntonousBallHandlerCommand();
+    
+    if (autonomousDriveCommand != null) {
+      autonomousDriveCommand.schedule();
     }
+    
   
   }
 
@@ -110,8 +114,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (autonomousDriveCommand != null) {
+      autonomousDriveCommand.cancel();
     }
     // here we would also initialize the teleop command but as i said that doesn't make sense with the current code makeup
   }

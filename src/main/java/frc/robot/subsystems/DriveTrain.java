@@ -4,10 +4,10 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
+
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.ADIS16448_IMU;
+
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry; // i am very upset about the amount of effort it took me to get this single stupid import to work i hate my life life is suffering and pain
@@ -19,16 +19,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.SimulationConstants;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
+
+
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 import com.revrobotics.CANSparkMax;
+
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.simulation.ADIS16448_IMUSim;
+
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 
 
@@ -39,41 +41,28 @@ public class DriveTrain extends SubsystemBase {
   public DifferentialDrivetrainSim m_drivetrainSimulator;
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
-  private final Encoder m_leftEncoder;
-  private final Encoder m_rightEncoder;
-  private final ADIS16448_IMU m_gyro;
   private Boolean breakStatus;
-  
-  
   private DifferentialDrive m_drive;
-  private EncoderSim m_leftEncoderSim;
-  private EncoderSim m_rightEncoderSim;
   private Field2d fieldSim;
-  private ADIS16448_IMUSim m_gyroSim;
   private final DifferentialDriveOdometry m_odometry;
-
+  private double cmPerTick;
   
   public DriveTrain() {
     
     m_leftDriveFront = new CANSparkMax(RobotMap.MOTOR_LEFT_MASTER_ID, MotorType.kBrushless);
     m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
     m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
-    m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless);
-    
+    m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless); 
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
-    rightMotors.setInverted(RobotMap.RIGHT_SIDE_INVERTED);
-    leftMotors.setInverted(RobotMap.LEFT_SIDE_INVERTED);
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
+    breakStatus = false;
+   
     
-    m_leftEncoder = 
-    new Encoder(RobotMap.MOTOR_LEFT_MASTER_ID,RobotMap.MOTOR_LEFT_SLAVE_ID,RobotMap.LEFT_SIDE_INVERTED);
-    m_rightEncoder = 
-    new Encoder(RobotMap.MOTOR_RIGHT_MASTER_ID,RobotMap.MOTOR_RIGHT_SLAVE_ID,RobotMap.RIGHT_SIDE_INVERTED);
-    m_leftEncoder.setDistancePerPulse(DriveConstants.ENCODER_PULSE_DISTANCE);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.ENCODER_PULSE_DISTANCE);
-    m_gyro = new ADIS16448_IMU();
     resetEncoders();
+    fieldSim = new Field2d();
+    SmartDashboard.putData("status/fieldlocation", fieldSim);
+    //we might want to zero heading here if we can get that to work
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
     // this code basically assigns motor controllers to variables, then groups for the sides, then the drivetrain and assigns values to our encoders
     // also inverts the right side to make sure the motor moves straight
@@ -88,9 +77,8 @@ public class DriveTrain extends SubsystemBase {
             DriveConstants.WHEEL_RADIUS,
             DriveConstants.TRACK_WIDTH,
             SimulationConstants.MEASUREMENT_NOISE);
-      m_leftEncoderSim = new EncoderSim(m_leftEncoder);
-      m_rightEncoderSim = new EncoderSim(m_rightEncoder);
-      m_gyroSim = new ADIS16448_IMUSim(m_gyro);
+      
+      
       fieldSim = new Field2d();
       SmartDashboard.putData("Field", fieldSim);
           // to edit the values of this part of code edit the constants is Constants.java
@@ -111,9 +99,6 @@ public class DriveTrain extends SubsystemBase {
       m_rightDriveFront.setIdleMode(IdleMode.kCoast);
       m_rightDriveBack.setIdleMode(IdleMode.kCoast);
     }
-
-    
-
   }
 
       @Override
@@ -126,41 +111,35 @@ public class DriveTrain extends SubsystemBase {
             -leftMotors.get() * RobotController.getBatteryVoltage(),
             rightMotors.get() * RobotController.getBatteryVoltage());
         m_drivetrainSimulator.update(0.020);
-        m_leftEncoderSim.setDistance(m_drivetrainSimulator.getLeftPositionMeters());
-        m_leftEncoderSim.setRate(m_drivetrainSimulator.getLeftVelocityMetersPerSecond());
-        m_rightEncoderSim.setDistance(m_drivetrainSimulator.getRightPositionMeters());
-        m_rightEncoderSim.setRate(m_drivetrainSimulator.getRightVelocityMetersPerSecond());
-        m_gyroSim.setGyroAngleZ(-m_drivetrainSimulator.getHeading().getDegrees());
+        
+        //m_gyroSim.setGyroAngleZ(-m_drivetrainSimulator.getHeading().getDegrees());
         //  note, the code that these are using may involve a drive function that controls the speed of the motors using volts directly
         // also only important for simulation so only look at this if you are having issues with simulation results
       }
-     
-
-      
-      
-
-
     
-
-
-  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     // if i remember correctly nothing has to be in here but i think it has something to do with the simulation so don't touch it for now
     if (RobotBase.isSimulation()) {  m_odometry.update(
           Rotation2d.fromDegrees(getHeading()),
-          m_leftEncoder.getDistance(),
-          m_rightEncoder.getDistance());
+          m_leftDriveFront.getEncoder().getPosition(),
+          m_rightDriveFront.getEncoder().getPosition());
       fieldSim.setRobotPose(getPose());
       
     }
+    getHeading();
+    SmartDashboard.putNumber("status/robotspeedinmeterspersecond", DriveConstants.WHEEL_CIRCUMFERENCE/(m_leftDriveFront.getEncoder().getCountsPerRevolution() *4)); // displays speed in meters per second
+    SmartDashboard.putData("status/drivetraindata", m_drive);
   }
   
-  
+  /*
+  //thankfully we do not need this class because i couldn't find a way to do it on mr myer gyro
   public void zeroHeading() {
-    m_gyro.reset();
+    gyro.reset();
   }
+  */
+
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
     m_drivetrainSimulator.setPose(pose);
@@ -173,30 +152,43 @@ public class DriveTrain extends SubsystemBase {
     m_drive.arcadeDrive(-turn,throttle, true);
     
   }
+
   // this is necessary for a class in robot.java for the simulation
   // this is not important in any way outside of the simulation
   public double getDrawnCurrentAmps() {
     return m_drivetrainSimulator.getCurrentDrawAmps();
 
   }
+
   public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+    return (m_leftDriveFront.getEncoder().getPosition() + m_rightDriveFront.getEncoder().getPosition()) / 2.0;
   }
+
   public Pose2d getPose() {
     return m_odometry.getPoseMeters();
   }
-  public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
-  }
-  public double getHeading() {
 
-    
-    
-     return Math.IEEEremainder(m_gyro.getGyroAngleZ(), 360) * (SimulationConstants.SIM_GYRO_INVERTED ? -1.0 : 1.0);
+  public void resetEncoders() {
+    m_leftDriveFront.getEncoder().setPosition(0);
+    m_rightDriveFront.getEncoder().setPosition(0);
   }
+
+  public double getHeading() {
+    cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (m_leftDriveFront.getEncoder().getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
+    double degreesPerTick = cmPerTick / (DriveConstants.WHEEL_RADIUS * 100) * (180 * Math.PI);
+    // multiplied by 100 to get in CM
+    double encoderDifference = m_leftDriveFront.getEncoder().getPosition() - m_rightDriveFront.getEncoder().getPosition();
+    double turningValue = encoderDifference * degreesPerTick;
+    
+    double finalDegrees= (turningValue % 360) * -1;
+    System.out.println("the heading of the robot is" + finalDegrees);
+    SmartDashboard.putNumber("status/robotheading", finalDegrees);
+    return finalDegrees;
+    
+  }
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return  new DifferentialDriveWheelSpeeds(m_leftEncoder.getRate(), m_rightEncoder.getRate());
+    return  new DifferentialDriveWheelSpeeds(m_leftDriveFront.getEncoder().getVelocity(), m_rightDriveFront.getEncoder().getVelocity());
   }
 
   public void tankDriveVolts(double leftVolts, double rightVolts){
@@ -204,11 +196,9 @@ public class DriveTrain extends SubsystemBase {
     if (Math.max(Math.abs(leftVolts),Math.abs(rightVolts))> batteryVoltage ){
       leftVolts *= batteryVoltage /12.0;
       rightVolts *= batteryVoltage/ 12.0;
-
     }
     leftMotors.setVoltage(leftVolts);
     rightMotors.setVoltage(rightVolts);
     m_drive.feed();
-
   }
 }
