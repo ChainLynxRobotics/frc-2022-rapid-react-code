@@ -60,15 +60,15 @@ public class RobotContainer {
     ballHandler = new BallHandler();
     robotArm = new RobotArm();
     // i spent 2 hours before i realized i just needed to type new ffs me
-    
-    // Configure the button bindings
-    
     // start commands
     startCommands();
-    
-  
+    configureCameras();
     }
   
+  private void configureCameras() {
+    
+  }
+
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
