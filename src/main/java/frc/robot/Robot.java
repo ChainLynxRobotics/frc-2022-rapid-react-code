@@ -25,10 +25,8 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 public class Robot extends TimedRobot {
   
   private RobotContainer robotContainer;
-  // for each of the commands, handle timing seperately, and have it all add up, if it works that way i also might have some commands trigger other commands
+  
   private Command autonomousDriveCommand;
-  private Command autonomousArmCommand;
-  private Command autonomousBallHandlerCommand;
   // the subsystems are declared here, and not in robotInit as you would assume to workaround the 
   //fact that simulation periodic actucally runs BEFORE robotInit 
   //so i had to declare them here to avoid a null pointer error
@@ -92,18 +90,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() { 
     robotContainer.onAutoInit();
     autonomousDriveCommand = robotContainer.getAutonomousDriveCommand();
-    autonomousArmCommand = robotContainer.getAuntonomousArmCommand();
-    autonomousBallHandlerCommand= robotContainer.getAuntonousBallHandlerCommand();
     
     if (autonomousDriveCommand != null) {
       autonomousDriveCommand.schedule();
     }
-    if (autonomousArmCommand != null){
-      autonomousArmCommand.schedule();
-    }
-    if (autonomousBallHandlerCommand != null){
-      autonomousBallHandlerCommand.schedule();
-    }
+    
   
   }
 
@@ -127,12 +118,7 @@ public class Robot extends TimedRobot {
     if (autonomousDriveCommand != null) {
       autonomousDriveCommand.cancel();
     }
-    if (autonomousArmCommand != null){
-      autonomousArmCommand.cancel();
-    }
-    if (autonomousBallHandlerCommand != null){
-      autonomousBallHandlerCommand.cancel();
-    }
+    
   
     // here we would also initialize the teleop command but as i said that doesn't make sense with the current code makeup
   }

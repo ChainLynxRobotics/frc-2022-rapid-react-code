@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
@@ -48,7 +49,7 @@ public class RobotContainer {
   private static OI m_OI;
   private static BallHandler ballHandler;
   private static boolean robotReversed;
-  private static ConditionalCommand robotArmController;
+  
   private static Timer autoTimer;
   private static Timer testTimer;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
@@ -70,10 +71,9 @@ public class RobotContainer {
   
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
-    robotArmController= new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> m_OI.getOperatorButton2Toggle());
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
     ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorButton(1)),ballHandler));
-    robotArm.setDefaultCommand(robotArmController);
+    robotArm.setDefaultCommand(new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> m_OI.getOperatorButton2Toggle()));
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
@@ -98,12 +98,14 @@ public class RobotContainer {
     autoTimer= new Timer();
     autoTimer.start();
   }
+  // this is the method where you control the arm during auto false means arm is down, true means arm goes up
   private boolean autoArmTimer(){
     if(autoTimer.get()<=4){
       return false;
     }
     return true;
   }
+  //this is the method where you control the intake during auto, will change when  code gets updated to operator preferences but for now 0 is keeps balls in, -1 is intakes balls and 1 is outtakes balls
   private double autoBallHandleTimer(){
     if(autoTimer.get()<=4){
       return -1;
@@ -118,6 +120,9 @@ public class RobotContainer {
     autoTimer.stop();
   }
   
+  
+  
+  // this code is for breaking in the gearbox and nothing else, delete when that is done
   public void onTestInit() {
     testTimer= new Timer();
     testTimer.start();
@@ -149,6 +154,7 @@ public class RobotContainer {
       return .7;
     }
   }
+  // end of test code
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -191,16 +197,12 @@ public class RobotContainer {
       driveTrain);
     
     driveTrain.resetOdometry(pathWeaverTrajectory.getInitialPose());
-    return autoCommand.andThen(() -> driveTrain.tankDriveVolts(0, 0));
+    return new ParallelCommandGroup(autoCommand.andThen(() -> driveTrain.tankDriveVolts(0, 0)),
+      new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> autoArmTimer()),
+      new RunCommand(() -> ballHandler.ballHandlerRunning(autoBallHandleTimer(), false), ballHandler));
     
   }
-public Command getAuntonomousArmCommand() {
-    
-  return new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> autoArmTimer()) ;
-}
-public Command getAuntonousBallHandlerCommand() {
-    return new RunCommand(() -> ballHandler.ballHandlerRunning(autoBallHandleTimer(), false), ballHandler);
-}
+
 
 public Command getTestDriveCommand() {
     return new RunCommand(() -> driveTrain.testDrive(testLeftSidePower(),testRightSidePower()), driveTrain);

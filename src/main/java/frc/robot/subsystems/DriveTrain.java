@@ -134,7 +134,7 @@ public class DriveTrain extends SubsystemBase {
   }
   
   /*
-  //thankfully we do not need this class because i couldn't find a way to do it on mr myer gyro
+  //unnessary with current code as resetting encoder resets heading
   public void zeroHeading() {
     gyro.reset();
   }
@@ -172,7 +172,7 @@ public class DriveTrain extends SubsystemBase {
     m_leftDriveFront.getEncoder().setPosition(0);
     m_rightDriveFront.getEncoder().setPosition(0);
   }
-
+  // switch to a gyro if we cant get it working for encoders by the time we have a gyro
   public double getHeading() {
     cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (m_leftDriveFront.getEncoder().getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
     double degreesPerTick = cmPerTick / (DriveConstants.WHEEL_RADIUS * 100) * (180 * Math.PI);
@@ -190,7 +190,7 @@ public class DriveTrain extends SubsystemBase {
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
     return  new DifferentialDriveWheelSpeeds(m_leftDriveFront.getEncoder().getVelocity(), m_rightDriveFront.getEncoder().getVelocity());
   }
-
+  //tank drive volts method solely for following trajectories
   public void tankDriveVolts(double leftVolts, double rightVolts){
     var batteryVoltage = RobotController.getBatteryVoltage();
     if (Math.max(Math.abs(leftVolts),Math.abs(rightVolts))> batteryVoltage ){
@@ -201,6 +201,7 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setVoltage(rightVolts);
     m_drive.feed();
   }
+  // this is for testing but more generic than other test code so probobly worth keeping in after the others are gone
   public void testDrive(double leftSpeed, double rightSpeed){
     m_drive.tankDrive(leftSpeed, rightSpeed);
   }

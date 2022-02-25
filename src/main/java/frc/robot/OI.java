@@ -19,11 +19,13 @@ public class OI {
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
         return -driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
+        // note math to invert axis totally uneccessary, just change it in robot container
     }
     
     public double getOperatorStickAxis(int axis){
         return operatorStick.getRawAxis(axis);
     }
+    //lmao the axis -1 needed to make this code work is already there in the atrocity that is the getdrivestickrawaxis method
     public int getDriveStickSliderAxis(){
         return driveStick.getAxisCount() ;
     }
