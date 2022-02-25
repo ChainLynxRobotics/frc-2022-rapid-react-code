@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 import com.revrobotics.CANSparkMax;
-
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -46,6 +46,8 @@ public class DriveTrain extends SubsystemBase {
   private Field2d fieldSim;
   private final DifferentialDriveOdometry m_odometry;
   private double cmPerTick;
+  private RelativeEncoder leftEncoder;
+  private RelativeEncoder rightEncoder;
   
   public DriveTrain() {
     
@@ -53,6 +55,8 @@ public class DriveTrain extends SubsystemBase {
     m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
     m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
     m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless); 
+    leftEncoder= m_leftDriveFront.getEncoder();
+    rightEncoder= m_rightDriveFront.getEncoder();
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
@@ -123,8 +127,8 @@ public class DriveTrain extends SubsystemBase {
     // if i remember correctly nothing has to be in here but i think it has something to do with the simulation so don't touch it for now
     if (RobotBase.isSimulation()) {  m_odometry.update(
           Rotation2d.fromDegrees(getHeading()),
-          m_leftDriveFront.getEncoder().getPosition(),
-          m_rightDriveFront.getEncoder().getPosition());
+          leftEncoder.getPosition(),
+          rightEncoder.getPosition());
       fieldSim.setRobotPose(getPose());
       
     }
@@ -161,7 +165,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getAverageEncoderDistance() {
-    return (m_leftDriveFront.getEncoder().getPosition() + m_rightDriveFront.getEncoder().getPosition()) / 2.0;
+    return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2.0;
   }
 
   public Pose2d getPose() {
@@ -169,15 +173,15 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void resetEncoders() {
-    m_leftDriveFront.getEncoder().setPosition(0);
-    m_rightDriveFront.getEncoder().setPosition(0);
+    leftEncoder.setPosition(0);
+    rightEncoder.setPosition(0);
   }
   // switch to a gyro if we cant get it working for encoders by the time we have a gyro
   public double getHeading() {
-    cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (m_leftDriveFront.getEncoder().getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
+    cmPerTick =  DriveConstants.WHEEL_CIRCUMFERENCE * 100 / (leftEncoder.getCountsPerRevolution() *4); // cpr does not count for 4X scaling with this library
     double degreesPerTick = cmPerTick / (DriveConstants.WHEEL_RADIUS * 100) * (180 * Math.PI);
     // multiplied by 100 to get in CM
-    double encoderDifference = m_leftDriveFront.getEncoder().getPosition() - m_rightDriveFront.getEncoder().getPosition();
+    double encoderDifference = leftEncoder.getPosition() - rightEncoder.getPosition();
     double turningValue = encoderDifference * degreesPerTick;
     
     double finalDegrees= (turningValue % 360) * -1;
@@ -186,9 +190,9 @@ public class DriveTrain extends SubsystemBase {
     return finalDegrees;
     
   }
-
+  // this might throw an error, it wont be used for week one though so figure it out later if it does
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return  new DifferentialDriveWheelSpeeds(m_leftDriveFront.getEncoder().getVelocity(), m_rightDriveFront.getEncoder().getVelocity());
+    return  new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()*cmPerTick,rightEncoder.getVelocity()*cmPerTick);
   }
   //tank drive volts method solely for following trajectories
   public void tankDriveVolts(double leftVolts, double rightVolts){
