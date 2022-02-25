@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override // when we add autonomous code we should initialize it here
   public void autonomousInit() { 
+    robotContainer.onAutoInit();
     autonomousDriveCommand = robotContainer.getAutonomousDriveCommand();
     autonomousArmCommand = robotContainer.getAuntonomousArmCommand();
     autonomousBallHandlerCommand= robotContainer.getAuntonousBallHandlerCommand();
@@ -97,7 +98,12 @@ public class Robot extends TimedRobot {
     if (autonomousDriveCommand != null) {
       autonomousDriveCommand.schedule();
     }
-    
+    if (autonomousArmCommand != null){
+      autonomousArmCommand.schedule();
+    }
+    if (autonomousBallHandlerCommand != null){
+      autonomousBallHandlerCommand.schedule();
+    }
   
   }
 
@@ -107,6 +113,10 @@ public class Robot extends TimedRobot {
     // this should actually be empty unless we move the command schedueler out of robot periodic and into this and teleop periodic
     // the reason we leave this part of the code empty, is the commands should handle the robots movement on their own, we just initialze that for autonomous
   } 
+  @Override
+  public void autonomousExit(){
+    robotContainer.onAutoEnd();
+  }
 
   @Override
   public void teleopInit() {
@@ -117,6 +127,13 @@ public class Robot extends TimedRobot {
     if (autonomousDriveCommand != null) {
       autonomousDriveCommand.cancel();
     }
+    if (autonomousArmCommand != null){
+      autonomousArmCommand.cancel();
+    }
+    if (autonomousBallHandlerCommand != null){
+      autonomousBallHandlerCommand.cancel();
+    }
+  
     // here we would also initialize the teleop command but as i said that doesn't make sense with the current code makeup
   }
 
@@ -130,9 +147,19 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    robotContainer.onTestInit();
+    autonomousDriveCommand = robotContainer.getTestDriveCommand();
+    if (autonomousDriveCommand != null) {
+      autonomousDriveCommand.schedule();
+    }
+   
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
+  @Override
+  public void testExit(){
+    robotContainer.onTestEnd();
+  }
 }

@@ -201,4 +201,7 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setVoltage(rightVolts);
     m_drive.feed();
   }
+  public void testDrive(double leftSpeed, double rightSpeed){
+    m_drive.tankDrive(leftSpeed, rightSpeed);
+  }
 }

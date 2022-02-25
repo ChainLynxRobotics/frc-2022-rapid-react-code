@@ -50,6 +50,7 @@ public class RobotContainer {
   private static boolean robotReversed;
   private static ConditionalCommand robotArmController;
   private static Timer autoTimer;
+  private static Timer testTimer;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
   
   public RobotContainer() {
@@ -113,7 +114,41 @@ public class RobotContainer {
     return 0;
   }
   // also note this auto code is uncalibrated and for the optimistic solution, ie commit to main, will have a more realistic branch of shoot then leave tarmak for rest of options
+  public void onAutoEnd(){
+    autoTimer.stop();
+  }
   
+  public void onTestInit() {
+    testTimer= new Timer();
+    testTimer.start();
+  }
+
+  public void onTestEnd(){
+    testTimer.stop();
+  }
+
+  public double testRightSidePower(){
+    if (testTimer.get() <=30){
+      return 0;
+    }
+    else if(testTimer.get()<= 60){
+      return .7;
+    }
+    else{
+      return .7;
+    }
+  }
+  public double testLeftSidePower(){
+  if (testTimer.get() <=30){
+      return .7;
+    }
+    else if(testTimer.get()<= 60){
+      return 0;
+    }
+    else{
+      return .7;
+    }
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -166,6 +201,12 @@ public Command getAuntonomousArmCommand() {
 public Command getAuntonousBallHandlerCommand() {
     return new RunCommand(() -> ballHandler.ballHandlerRunning(autoBallHandleTimer(), false), ballHandler);
 }
+
+public Command getTestDriveCommand() {
+    return new RunCommand(() -> driveTrain.testDrive(testLeftSidePower(),testRightSidePower()), driveTrain);
+}
+
+
   
 }
 
