@@ -1,7 +1,3 @@
-// i chose to comment out this class because i had an error trying to run a command
-// we will probobly use this during the competion season to help signifigantly with organizing our subsystems and code in general
-// but for now at least for demonstation purposes we will not use this class
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -44,12 +40,10 @@ public class RobotContainer {
     // i spent 2 hours before i realized i just needed to type new ffs me
     // start commands
     startCommands();
-    configureCameras();
+    
     }
   
-  private void configureCameras() {
-    
-  }
+  
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
