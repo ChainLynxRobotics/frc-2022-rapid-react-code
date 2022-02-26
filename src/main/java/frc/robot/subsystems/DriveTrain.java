@@ -192,7 +192,7 @@ public class DriveTrain extends SubsystemBase {
   }
   // this might throw an error, it wont be used for week one though so figure it out later if it does
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return  new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()*cmPerTick,rightEncoder.getVelocity()*cmPerTick);
+    return  new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity()*cmPerTick/100,rightEncoder.getVelocity()*cmPerTick/100);
   }
   //tank drive volts method solely for following trajectories
   public void tankDriveVolts(double leftVolts, double rightVolts){
