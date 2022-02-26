@@ -34,14 +34,14 @@ public class RobotArm extends SubsystemBase {
 
   public void raiseArm() {
     if (!armStatus){
-      armMotor.set(.1);
+      armMotor.set(.2);
       if(armMotor.getEncoder().getVelocity()==0){
-        armMotor.set(0);
+        armMotor.set(.05);
         armStatus = true;
       }
     }
     else{
-      armMotor.set(0);
+      armMotor.set(0.05);
     }
   }
 
