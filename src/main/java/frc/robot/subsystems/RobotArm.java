@@ -15,14 +15,20 @@ public class RobotArm extends SubsystemBase {
   /** Creates a new robotArm. */
   private CANSparkMax armMotor;
   private boolean armStatus;
+  private double avgDeltaVelocity;
+  private double prevVelocity;
+  private final static double EXPONENT_WEIGHT = 2;
   /*private double upperAngle;
   private double lowerAngle;*/
-
+  
   public RobotArm() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
     
     armStatus = true;
+
+    avgDeltaVelocity = 0;
+    prevVelocity = 0;
   }
   
   
@@ -33,28 +39,50 @@ public class RobotArm extends SubsystemBase {
   }
 
   public void raiseArm() {
-    if (!armStatus){
+    
+    if (!armStatus) {
       armMotor.set(.2);
-      if(armMotor.getEncoder().getVelocity()==0){
-        armMotor.set(.05);
+
+      double currentVelocity = armMotor.getEncoder().getVelocity();
+      double currentDeltaVelocity = Math.abs(prevVelocity - currentVelocity);
+
+      if (Math.abs(avgDeltaVelocity - currentDeltaVelocity) > (avgDeltaVelocity / 10)) {
+        armMotor.set(0);
         armStatus = true;
       }
-    }
-    else{
-      armMotor.set(0.05);
+
+      prevVelocity = currentVelocity;
+      // update EMA
+      avgDeltaVelocity = avgDeltaVelocity + (EXPONENT_WEIGHT * (currentDeltaVelocity - avgDeltaVelocity));
+    } else {
+      armMotor.set(0);
+      prevVelocity = 0;
+      avgDeltaVelocity = 0;
     }
   }
 
   public void lowerArm()  {
-    if(armStatus){ 
-      armMotor.set(-.1);
-      if(armMotor.getEncoder().getVelocity()==0){
+    if (armStatus) { 
+
+      armMotor.set(-.2);
+
+      double currentVelocity = armMotor.getEncoder().getVelocity();
+      double currentDeltaVelocity = Math.abs(prevVelocity - currentVelocity);
+
+      if (Math.abs(avgDeltaVelocity - currentDeltaVelocity) > (avgDeltaVelocity / 10)) {
         armMotor.set(0);
-        armStatus =false;
+        
+        armStatus = false;
       }
-    }
-    else{
+
+      prevVelocity = currentVelocity;
+      // update EMA
+      avgDeltaVelocity = avgDeltaVelocity + (EXPONENT_WEIGHT * (currentDeltaVelocity - avgDeltaVelocity));
+
+    } else {
       armMotor.set(0);
+      prevVelocity = 0;
+      avgDeltaVelocity = 0;
     }
   }
   

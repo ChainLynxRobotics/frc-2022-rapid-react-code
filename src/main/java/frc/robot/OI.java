@@ -13,8 +13,7 @@ import frc.robot.Constants.RobotMap;
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
-    private boolean operatorButtons67LastValue = false; 
-    
+    private boolean operatorButtons67LastValue = true;
     
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
