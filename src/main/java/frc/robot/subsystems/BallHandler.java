@@ -6,7 +6,7 @@ package frc.robot.subsystems;
 
 
 
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,10 +15,10 @@ import frc.robot.Constants.RobotMap;
 public class BallHandler extends SubsystemBase {
   /** Creates a new Intake. */
   
-  private PWMTalonSRX ballHandlerMotor;
+  private WPI_VictorSPX ballHandlerMotor;
   
   public BallHandler() {
-    ballHandlerMotor = new PWMTalonSRX(RobotMap.BALLHANDLER_MOTOR_ID);
+    ballHandlerMotor = new WPI_VictorSPX(RobotMap.BALLHANDLER_MOTOR_ID);
     
   }
 

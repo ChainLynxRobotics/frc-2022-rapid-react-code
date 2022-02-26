@@ -14,7 +14,7 @@ import frc.robot.Constants.RobotMap;
 public class RobotArm extends SubsystemBase {
   /** Creates a new robotArm. */
   private CANSparkMax armMotor;
-  
+  private boolean armStatus;
   /*private double upperAngle;
   private double lowerAngle;*/
 
@@ -22,7 +22,7 @@ public class RobotArm extends SubsystemBase {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
     
-    
+    armStatus = true;
   }
   
   
@@ -33,23 +33,29 @@ public class RobotArm extends SubsystemBase {
   }
 
   public void raiseArm() {
-    
-    armMotor.set(.1);
-    
+    if (!armStatus){
+      armMotor.set(.1);
+      if(armMotor.getEncoder().getVelocity()==0){
+        armMotor.set(0);
+        armStatus = true;
+      }
+    }
+    else{
+      armMotor.set(0);
+    }
   }
 
   public void lowerArm()  {
-    armMotor.set(-.1);
-    try {
-      Thread.sleep(100);
-    } catch (InterruptedException e) {
-      System.out.println("arm wait didn't work");
+    if(armStatus){ 
+      armMotor.set(-.1);
+      if(armMotor.getEncoder().getVelocity()==0){
+        armMotor.set(0);
+        armStatus =false;
+      }
     }
-    while(armMotor.getEncoder().getVelocity() < 0){
-      //System.out.println("armlowering");
+    else{
+      armMotor.set(0);
     }
-    armMotor.set(0);
-    
   }
   
 }

@@ -87,7 +87,7 @@ public class RobotContainer {
     driveMultiplier =  m_OI.getDriverButton(1)?-1:driveMultiplier;
     robotReversed= m_OI.getDriverButton(1);// this is ugly and bad code: it works
     driveMultiplier *= .84;
-    System.out.println("the multiplier of the robots speed is" + driveMultiplier);
+    
     SmartDashboard.putBoolean("status/robottReversed", robotReversed);
     SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
     SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*driveMultiplier:m_OI.getDriveStickRawAxis(0)*driveMultiplier); // i am sorry this was genuinely the easiest solution i could come up with
