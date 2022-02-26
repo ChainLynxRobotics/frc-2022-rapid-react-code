@@ -13,7 +13,7 @@ import frc.robot.Constants.RobotMap;
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
-    private boolean operatorButton2LastValue = false; 
+    private boolean operatorButtons67LastValue = false; 
     
     
     public double getDriveStickRawAxis(int axis){
@@ -30,16 +30,14 @@ public class OI {
         return driveStick.getAxisCount() ;
     }
     // i hate everything about this piece of code but i am not going to declare classwide variables for every button so i will just cry
-    public boolean getOperatorButton2Toggle(){
-        if(operatorStick.getRawButtonPressed(2)){
-            if(operatorButton2LastValue){
-                operatorButton2LastValue= false;
-            } 
-            else{
-                operatorButton2LastValue= true;
-            }
+    public boolean getOperatorButtons67Toggle(){
+        if(operatorStick.getRawButtonPressed(6)){
+            operatorButtons67LastValue = true;
         }
-        return operatorButton2LastValue;
+        else if(operatorStick.getRawButtonPressed(7)){
+            operatorButtons67LastValue = false;
+        }
+        return operatorButtons67LastValue;
     }
     public boolean getOperatorButton(int button){
         return operatorStick.getRawButton(button);
