@@ -25,7 +25,7 @@ public class RobotArm extends SubsystemBase {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
     
-    armStatus = true;
+    armStatus = false;
 
     avgDeltaVelocity = 0;
     prevVelocity = 0;
