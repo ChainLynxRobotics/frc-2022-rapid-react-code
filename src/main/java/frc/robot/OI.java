@@ -6,15 +6,16 @@ package frc.robot;
 //import edu.wpi.first.wpilibj.Joystick;
 // i changed it to a generic HID instead of joystick to make code easier to compare to docs
 import edu.wpi.first.wpilibj.GenericHID;
-
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.RobotMap;
 
 // ask whoever the operator ends up being what button they want the intake to be
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
-    private boolean operatorButtons67LastValue = true;
-    
+    private boolean operatorButton2LastValue = false;
+    private JoystickButton operatorButton7 = new JoystickButton(operatorStick, 7);
+    private JoystickButton operatorButton6 = new JoystickButton(operatorStick, 7);
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
         return -driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
@@ -29,15 +30,24 @@ public class OI {
         return driveStick.getAxisCount() ;
     }
     // i hate everything about this piece of code but i am not going to declare classwide variables for every button so i will just cry
-    public boolean getOperatorButtons67Toggle(){
-        if(operatorStick.getRawButtonPressed(6)){
-            operatorButtons67LastValue = true;
-        }
-        else if(operatorStick.getRawButtonPressed(7)){
-            operatorButtons67LastValue = false;
-        }
-        return operatorButtons67LastValue;
+    public JoystickButton getOperatorButton7(){
+        return operatorButton7;
     }
+    public JoystickButton getOperatorButton6(){
+        return operatorButton6;
+    }
+    public boolean getOperatorButton2Toggle(){
+        if(operatorStick.getRawButtonPressed(2)){
+             if(operatorButton2LastValue){
+                operatorButton2LastValue= false;
+            } 
+            else{
+                operatorButton2LastValue= true;
+            }
+        }
+        return operatorButton2LastValue;
+        }
+    
     public boolean getOperatorButton(int button){
         return operatorStick.getRawButton(button);
     }

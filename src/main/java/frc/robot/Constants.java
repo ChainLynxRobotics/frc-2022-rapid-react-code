@@ -38,10 +38,6 @@ public final class Constants {
 	   public static final int JOYSTICK_PORT2 = 1;
       public static final int BALLHANDLER_MOTOR_ID = 6;
       public static final int ROBOT_ARM_MOTOR_ID = 5;
-      
-        
-
-
 
    }
    public static final class SimulationConstants{
@@ -75,6 +71,11 @@ public final class Constants {
       public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH);
       public static final double AUTO_VOLTAGE_CONSTRAINT = 7;
       public static final double AUTO_DRIVE_SPEED = 0;
+
+
+      // Robot arm math stuff
+      public static final double ROBOT_ARM_EXPONENT_WEIGHT = 1.5;
+      public static final double ROBOT_ARM_DELTA_SENSITIVITY = 20;
 
    } 
 }

@@ -20,11 +20,11 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 // import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint; //pathweaver has this so we dont need to use this
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -54,17 +54,21 @@ public class RobotContainer {
   private static Timer autoTimer;
   private static Timer testTimer;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
-  
+  private PowerDistribution powerDistribution;
   public RobotContainer() {
     driveTrain = new DriveTrain();
     m_OI = new OI();
     ballHandler = new BallHandler();
     robotArm = new RobotArm();
+    powerDistribution = new PowerDistribution();
+    powerDistribution.clearStickyFaults();
     // i spent 2 hours before i realized i just needed to type new ffs me
     // start commands
+    
     startCommands();
     configureCameras();
     }
+  
   
   private void configureCameras() {
     
@@ -74,7 +78,7 @@ public class RobotContainer {
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
     ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorButton(1)),ballHandler));
-    robotArm.setDefaultCommand(new ConditionalCommand(new RunCommand(() -> robotArm.raiseArm(),robotArm),new RunCommand(() -> robotArm.lowerArm(), robotArm),() -> m_OI.getOperatorButtons67Toggle()).perpetually());
+    robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButton2Toggle()), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
@@ -93,6 +97,10 @@ public class RobotContainer {
     SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
     SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*driveMultiplier:m_OI.getDriveStickRawAxis(0)*driveMultiplier); // i am sorry this was genuinely the easiest solution i could come up with
     return driveMultiplier;
+  }
+  public void updateShuffleboard(){
+    SmartDashboard.putData(robotArm);
+
   }
   // note this probs wont be an error at competitions but for repeated auto testing we may want to check for null and reset the timers here, auto only works once per robot boot
   public void onAutoInit(){

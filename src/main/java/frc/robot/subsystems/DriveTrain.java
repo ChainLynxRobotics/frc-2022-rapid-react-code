@@ -185,7 +185,7 @@ public class DriveTrain extends SubsystemBase {
     double turningValue = encoderDifference * degreesPerTick;
     
     double finalDegrees= (turningValue % 360) * -1;
-    System.out.println("the heading of the robot is" + finalDegrees);
+    //System.out.println("the heading of the robot is" + finalDegrees);
     SmartDashboard.putNumber("status/robotheading", finalDegrees);
     return finalDegrees;
     
