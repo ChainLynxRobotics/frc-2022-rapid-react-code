@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override // when we add autonomous code we should initialize it here
   public void autonomousInit() { 
-    robotContainer.onAutoInit();
+    
     autonomousDriveCommand = robotContainer.getAutonomousDriveCommand();
     
     if (autonomousDriveCommand != null) {
@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
   } 
   @Override
   public void autonomousExit(){
-    robotContainer.onAutoEnd();
+    
   }
 
   @Override
@@ -137,12 +137,8 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     
-    robotContainer.onTestInit();
-    autonomousDriveCommand = robotContainer.getTestDriveCommand();
-    if (autonomousDriveCommand != null) {
-      autonomousDriveCommand.schedule();
-    }
-   
+    
+    
   }
 
   /** This function is called periodically during test mode. */
@@ -150,6 +146,6 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {}
   @Override
   public void testExit(){
-    robotContainer.onTestEnd();
+    
   }
 }

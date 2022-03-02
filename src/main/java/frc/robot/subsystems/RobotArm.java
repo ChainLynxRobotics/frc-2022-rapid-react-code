@@ -4,44 +4,23 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.RobotMap;
-
-public class RobotArm extends SubsystemBase {
+// i know that this might break things but i cant help but have a little fun with abstraction as it also allows for easier tweaking of arm subsystems at competion without breaking code
+public class RobotArm extends RobotArmBase {
   /** Creates a new robotArm. */
-  private CANSparkMax armMotor;
-  private boolean armStatus;
-  private double avgDeltaVelocity;
-  private double prevVelocity;
-  private Timer armTimer;
+  
   /*private double upperAngle;
   private double lowerAngle;*/
   
-  public RobotArm() {
-    armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
-    armMotor.setIdleMode(IdleMode.kBrake);
-    armTimer= new Timer();
-    armStatus = false;
-    armTimer.start();
-
-    avgDeltaVelocity = 0;
-    prevVelocity = 0;
-  }
   
-  
-
   @Override
-  public void periodic() {
-      //System.out.println("arm encoder position" + armMotor.getEncoder().getPosition());
+  protected void otherConfigs() {
+      
   }
-
-  public void raiseArm() {
+    
+  @Override
+  protected void raiseArm() {
     
     System.out.println("robot arm raise called");
     if(armTimer.get() < 1.5){
@@ -50,36 +29,10 @@ public class RobotArm extends SubsystemBase {
       else{
         armMotor.set(0.05);
       }
-    /*
-    // sorry alex your code doesnt work
-    if (!armStatus) {
-      System.out.println("robot arm raise running");
-      armMotor.set(.2);
-
-      double currentVelocity = armMotor.getEncoder().getVelocity();
-      double currentDeltaVelocity = Math.abs(prevVelocity - currentVelocity);
-
-      // update EMA
-      avgDeltaVelocity = avgDeltaVelocity + (DriveConstants.ROBOT_ARM_EXPONENT_WEIGHT * (currentDeltaVelocity - avgDeltaVelocity));
-      
-      if (Math.abs(avgDeltaVelocity - currentDeltaVelocity) > (avgDeltaVelocity / DriveConstants.ROBOT_ARM_DELTA_SENSITIVITY)) {
-        System.out.println("robot arm raise stopping");
-        armMotor.set(0);
-        armStatus = true;
-      }
-
-      prevVelocity = currentVelocity;
-      
-    } else {
-      System.out.println("robot arm already raised");
-      armMotor.set(0);
-      prevVelocity = 0;
-      avgDeltaVelocity = 0;
-    }
-    */
+    
   }
-
-  public void lowerArm()  {
+  @Override
+  protected void lowerArm()  {
   
     System.out.println("robot arm lower called");
     if(armTimer.get() < 2){
@@ -90,39 +43,11 @@ public class RobotArm extends SubsystemBase {
       0.05
       );
     }
-    /*
-    if (armStatus) { 
-      System.out.println("robot arm lower running");
-
-      armMotor.set(-.2);
-
-      double currentVelocity = armMotor.getEncoder().getVelocity();
-      double currentDeltaVelocity = Math.abs(prevVelocity - currentVelocity);
-      // update EMA
-      avgDeltaVelocity = avgDeltaVelocity + (DriveConstants.ROBOT_ARM_EXPONENT_WEIGHT * (currentDeltaVelocity - avgDeltaVelocity));
-      
-      if (Math.abs(avgDeltaVelocity - currentDeltaVelocity) > (avgDeltaVelocity / DriveConstants.ROBOT_ARM_DELTA_SENSITIVITY)) {
-        System.out.println("robot arm lower stopped");
-        armMotor.set(0);
-        
-        armStatus = false;
-      }
-
-      prevVelocity = currentVelocity;
-      
-
-    } else {
-      System.out.println("robot arm already lowered");
-      armMotor.set(0);
-      prevVelocity = 0;
-      avgDeltaVelocity = 0;
-    }
-    */
+    
   }
 
-
+  @Override
   public void moveArm(boolean ArmUp) {
-    
     if (ArmUp) {
       raiseArm();
       if(!armStatus){
@@ -136,6 +61,10 @@ public class RobotArm extends SubsystemBase {
       }
       armStatus = false;
     }
+    
   }
+
+
+  
   
 }
