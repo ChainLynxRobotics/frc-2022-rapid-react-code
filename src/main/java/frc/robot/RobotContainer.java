@@ -48,8 +48,8 @@ public class RobotContainer {
     }
   // this is where we will set up camera code
   private void configureCameras() {
-    CameraServer.startAutomaticCapture("camera1",1);
-    CameraServer.startAutomaticCapture("camera2",2);
+    CameraServer.startAutomaticCapture("camera1",0);
+    CameraServer.startAutomaticCapture("camera2",1);
   }
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
@@ -87,7 +87,7 @@ public class RobotContainer {
   public Command getAutonomousDriveCommand() {
     // this code should work but i am very skeptical of stuff like this so it might not
     return new SequentialCommandGroup(new StartEndCommand(() -> ballHandler.ballHandlerRunning(1,false), () -> ballHandler.ballHandlerRunning(0,false),ballHandler).withTimeout(2),
-    new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(4),new RunCommand(() -> robotArm.moveArm(false), robotArm));
+    new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(3),new RunCommand(() -> robotArm.moveArm(true), robotArm));
     
   }
   
