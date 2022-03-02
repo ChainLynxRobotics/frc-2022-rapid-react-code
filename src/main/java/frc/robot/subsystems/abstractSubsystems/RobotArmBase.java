@@ -16,7 +16,7 @@ public abstract class RobotArmBase extends SubsystemBase {
   
   protected CANSparkMax armMotor;
   protected Timer armTimer;
-  private boolean armStatus;
+  protected boolean armStatus;
   // you dont need to write a constructor, just another benifit
   public RobotArmBase() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
@@ -35,22 +35,7 @@ public abstract class RobotArmBase extends SubsystemBase {
   // here put code to run when the arm is raising / is raised
   protected abstract void raiseArm();
   // this is the method that is called by other objects, DO NOT OVERRIDE
-  public void moveArm(boolean ArmUp) {
-    
-    if (ArmUp) {
-      raiseArm();
-      if(!armStatus){
-        armTimer.reset();
-      }
-      armStatus = true;
-    } else {
-      lowerArm();
-      if(armStatus){
-        armTimer.reset();
-      }
-      armStatus = false;
-    }
-  }
+  public abstract void moveArm(boolean ArmUp); 
   
 
   @Override
