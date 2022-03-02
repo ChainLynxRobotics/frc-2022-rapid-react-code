@@ -121,6 +121,7 @@ public class Robot extends TimedRobot {
     if (autonomousDriveCommand != null) {
       autonomousDriveCommand.cancel();
     }
+    robotContainer.getRobotDrive().setBreakStatus(false);
     
   
     // here we would also initialize the teleop command but as i said that doesn't make sense with the current code makeup

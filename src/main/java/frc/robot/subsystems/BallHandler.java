@@ -28,10 +28,10 @@ public class BallHandler extends SubsystemBase {
     if(ballHandlerOff == true){
       ballHandlerMotor.set(0);
     } 
-    else if( inputSpeed > 0.05 ){
+    else if( inputSpeed > 0.2){
       ballHandlerMotor.set(-.1);
     }
-    else if (inputSpeed < -0.05){
+    else if (inputSpeed < -0.2){
       ballHandlerMotor.set(.25);
     }
     else{

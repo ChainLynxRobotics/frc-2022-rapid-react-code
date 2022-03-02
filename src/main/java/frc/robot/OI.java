@@ -14,8 +14,8 @@ public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
     private boolean operatorButton2LastValue = false;
-    private JoystickButton operatorButton7 = new JoystickButton(operatorStick, 7);
-    private JoystickButton operatorButton6 = new JoystickButton(operatorStick, 7);
+    
+    private boolean operatorButtons67LastValue;
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
         return -driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
@@ -30,11 +30,16 @@ public class OI {
         return driveStick.getAxisCount() ;
     }
     // i hate everything about this piece of code but i am not going to declare classwide variables for every button so i will just cry
-    public JoystickButton getOperatorButton7(){
-        return operatorButton7;
-    }
-    public JoystickButton getOperatorButton6(){
-        return operatorButton6;
+    
+    public boolean getOperatorButtons67Toggle(){
+        if(operatorStick.getRawButtonPressed(6)){
+            operatorButtons67LastValue = true;
+        }
+        
+        else if(operatorStick.getRawButtonPressed(7)){
+            operatorButtons67LastValue = false;
+        }
+        return operatorButtons67LastValue;
     }
     public boolean getOperatorButton2Toggle(){
         if(operatorStick.getRawButtonPressed(2)){
