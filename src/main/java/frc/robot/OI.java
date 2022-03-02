@@ -12,7 +12,8 @@ import frc.robot.Constants.RobotMap;
 public class OI {
     private GenericHID driveStick = new GenericHID(RobotMap.JOYSTICK_PORT1); // this is the joystick for movement
     private GenericHID operatorStick = new GenericHID(RobotMap.JOYSTICK_PORT2); // this joystick is for buttons
-    private boolean operatorButtons67LastValue = false;
+
+    private boolean operatorButtons67LastValue = true;
     public double getDriveStickRawAxis(int axis){
         //System.out.println("axis: " + axis);
         return -driveStick.getRawAxis(Math.abs(axis - 1)); // Math.abs = big hack to invert axes. Note: literally does not work with 2. If not working take away Callum's granola bar eating privileges
@@ -31,7 +32,6 @@ public class OI {
         if(operatorStick.getRawButtonPressed(6)){
             operatorButtons67LastValue = true;
         }
-        
         else if(operatorStick.getRawButtonPressed(7)){
             operatorButtons67LastValue = false;
         }
