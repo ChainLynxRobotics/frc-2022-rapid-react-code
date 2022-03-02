@@ -29,13 +29,13 @@ public class BallHandler extends SubsystemBase {
       ballHandlerMotor.set(0);
     } 
     else if( inputSpeed > 0.05 ){
-      ballHandlerMotor.set(.7);
+      ballHandlerMotor.set(-.1);
     }
     else if (inputSpeed < -0.05){
-      ballHandlerMotor.set(-1);
+      ballHandlerMotor.set(.25);
     }
     else{
-      ballHandlerMotor.set(-.25);
+      ballHandlerMotor.set(-.5);
     }
     
     SmartDashboard.putBoolean("status/ballHandlerOn", ballHandlerOff);
