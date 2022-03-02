@@ -22,6 +22,7 @@ public abstract class RobotArmBase extends SubsystemBase {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
     armTimer= new Timer();
+    // change this to true after code is tested
     armStatus = false;
     armTimer.start();
     otherConfigs();
