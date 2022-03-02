@@ -28,10 +28,11 @@ public class BallHandler extends SubsystemBase {
     if(ballHandlerOff == true){
       ballHandlerMotor.set(0);
     } 
-    else if( inputSpeed > 0.05 ){
-      ballHandlerMotor.set(-.1);
+    // i forgot how this works, test to fix it after auto
+    else if( inputSpeed > 0.2 ){
+      ballHandlerMotor.set(.7);
     }
-    else if (inputSpeed < -0.05){
+    else if (inputSpeed < -0.2){
       ballHandlerMotor.set(.25);
     }
     else{
