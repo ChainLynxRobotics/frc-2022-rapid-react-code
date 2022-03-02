@@ -8,6 +8,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,7 +48,8 @@ public class RobotContainer {
     }
   // this is where we will set up camera code
   private void configureCameras() {
-    
+    CameraServer.startAutomaticCapture("camera1",1);
+    CameraServer.startAutomaticCapture("camera2",2);
   }
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
