@@ -23,7 +23,7 @@ public abstract class RobotArmBase extends SubsystemBase {
     armMotor.setIdleMode(IdleMode.kBrake);
     armTimer= new Timer();
     // change this to true after code is tested
-    armStatus = false;
+    armStatus = true;
     armTimer.start();
     otherConfigs();
   }
