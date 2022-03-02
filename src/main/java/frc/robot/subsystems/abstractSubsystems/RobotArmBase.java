@@ -17,6 +17,7 @@ public abstract class RobotArmBase extends SubsystemBase {
   protected CANSparkMax armMotor;
   protected Timer armTimer;
   private boolean armStatus;
+  // you dont need to write a constructor, just another benifit
   public RobotArmBase() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);

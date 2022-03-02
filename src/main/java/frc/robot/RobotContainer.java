@@ -18,6 +18,7 @@ import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
 import frc.robot.subsystems.RobotArm;
+import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,7 +28,7 @@ import frc.robot.subsystems.RobotArm;
 */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private static RobotArm robotArm;
+  private static RobotArmBase robotArm;
   private static DriveTrain driveTrain;
   private static OI m_OI;
   private static BallHandler ballHandler;
