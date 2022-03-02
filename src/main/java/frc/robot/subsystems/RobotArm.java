@@ -4,31 +4,44 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-// i know that this might break things but i cant help but have a little fun with abstraction as it also allows for easier tweaking of arm subsystems at competion without breaking code
-public class RobotArm extends RobotArmBase {
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.RobotMap;
+
+public class RobotArm extends SubsystemBase {
   /** Creates a new robotArm. */
+  private CANSparkMax armMotor;
+  private boolean armStatus;
   private double avgDeltaVelocity;
   private double prevVelocity;
+  private Timer armTimer;
   /*private double upperAngle;
   private double lowerAngle;*/
   
-  
-  @Override
-  protected void otherConfigs() {
+  public RobotArm() {
+    armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
+    armMotor.setIdleMode(IdleMode.kBrake);
+    armTimer= new Timer();
+    armStatus = false;
+    armTimer.start();
+
     avgDeltaVelocity = 0;
-    prevVelocity = 0;   
+    prevVelocity = 0;
   }
-    
+  
   
 
   @Override
   public void periodic() {
       //System.out.println("arm encoder position" + armMotor.getEncoder().getPosition());
   }
-  @Override
-  protected void raiseArm() {
+
+  public void raiseArm() {
     
     System.out.println("robot arm raise called");
     if(armTimer.get() < 1.5){
@@ -65,8 +78,8 @@ public class RobotArm extends RobotArmBase {
     }
     */
   }
-  @Override
-  protected void lowerArm()  {
+
+  public void lowerArm()  {
   
     System.out.println("robot arm lower called");
     if(armTimer.get() < 2){
@@ -108,6 +121,21 @@ public class RobotArm extends RobotArmBase {
   }
 
 
-  
+  public void moveArm(boolean ArmUp) {
+    
+    if (ArmUp) {
+      raiseArm();
+      if(!armStatus){
+        armTimer.reset();
+      }
+      armStatus = true;
+    } else {
+      lowerArm();
+      if(armStatus){
+        armTimer.reset();
+      }
+      armStatus = false;
+    }
+  }
   
 }
