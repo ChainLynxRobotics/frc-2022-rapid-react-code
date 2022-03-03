@@ -16,7 +16,9 @@ public class RobotArm extends RobotArmBase {
   
   @Override
   protected void otherConfigs() {
-      
+    
+    armTimer= new Timer();
+    armTimer.start();
   }
     
   @Override
