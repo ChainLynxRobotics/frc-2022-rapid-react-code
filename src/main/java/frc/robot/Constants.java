@@ -23,8 +23,7 @@ import edu.wpi.first.math.numbers.N7;
 public final class Constants {
    public static final class RobotMap{
 
-        //these ID's are accurate to the old robot, not the 2022 robot
-
+      //these ID's are accurate to the old robot, not the 2022 robot
       
       public static final int MOTOR_LEFT_MASTER_ID = 2; //motor port values are the same as encoder port values
       public static final int MOTOR_LEFT_SLAVE_ID = 1;

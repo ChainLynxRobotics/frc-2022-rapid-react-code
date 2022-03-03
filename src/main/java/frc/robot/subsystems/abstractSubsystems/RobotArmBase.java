@@ -8,7 +8,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants.RobotMap;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 // extend this class if you want to make your own version of robot arm, this will make your life signifigantly easier
 public abstract class RobotArmBase extends SubsystemBase {
@@ -20,7 +19,7 @@ public abstract class RobotArmBase extends SubsystemBase {
   public RobotArmBase() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
-    // true means arm is up false means arm is down
+    // change this to true after code is tested
     armStatus = true;
     otherConfigs();
   }

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 
 // i know that this might break things but i cant help but have a little fun with abstraction as it also allows for easier tweaking of arm subsystems at competion without breaking code
@@ -13,7 +14,7 @@ public class RobotArm extends RobotArmBase {
   /*private double upperAngle;
   private double lowerAngle;*/
   
-  
+  protected Timer armTimer;
   @Override
   protected void otherConfigs() {
     
