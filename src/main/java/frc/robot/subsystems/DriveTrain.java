@@ -60,7 +60,7 @@ public class DriveTrain extends SubsystemBase {
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
     m_drive = new DifferentialDrive(leftMotors, rightMotors);
-    breakStatus = false;
+    breakStatus = true;
    
     
     resetEncoders();
