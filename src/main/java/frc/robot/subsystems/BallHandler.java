@@ -21,22 +21,20 @@ public class BallHandler extends SubsystemBase {
     ballHandlerMotor = new WPI_VictorSPX(RobotMap.BALLHANDLER_MOTOR_ID);
     
   }
-  public void ballHandlerRunning(double inputSpeed, boolean ballHandlerOff){
-    if(ballHandlerOff == true){
+  public void ballHandlerRunning(double dumpSpeed,boolean shootBall, boolean ballHandlerOff){
+    if(ballHandlerOff){
       ballHandlerMotor.set(0);
     }
     // i forgot how this works, test to fix it after auto
-    else if( inputSpeed > 0.2 ){
-      ballHandlerMotor.set(.7);
-    }
-    else if (inputSpeed < -0.2){
-      ballHandlerMotor.set(.25);
+    else if (shootBall){
+      ballHandlerMotor.set(dumpSpeed);
     }
     else{
       ballHandlerMotor.set(-.5);
     }
     
     SmartDashboard.putBoolean("status/ballHandlerOn", ballHandlerOff);
+    SmartDashboard.putNumber("status/ballDumpSpeed", dumpSpeed);
   }
 
 }

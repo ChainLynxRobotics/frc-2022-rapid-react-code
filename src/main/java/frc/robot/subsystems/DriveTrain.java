@@ -207,6 +207,6 @@ public class DriveTrain extends SubsystemBase {
   }
   // this is for testing but more generic than other test code so probobly worth keeping in after the others are gone
   public void testDrive(double leftSpeed, double rightSpeed){
-    m_drive.tankDrive(leftSpeed, rightSpeed);
+    m_drive.tankDrive(leftSpeed, -rightSpeed);
   }
 }

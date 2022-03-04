@@ -27,6 +27,9 @@ public class OI {
     public int getDriveStickSliderAxis(){
         return driveStick.getAxisCount() ;
     }
+    public int getOperatorStickSliderAxis(){
+        return operatorStick.getAxisCount()-1;
+    }
     // i hate everything about this piece of code but i am not going to declare classwide variables for every button so i will just cry
     public boolean getOperatorButtons67Toggle(){
         if(operatorStick.getRawButtonPressed(6)){

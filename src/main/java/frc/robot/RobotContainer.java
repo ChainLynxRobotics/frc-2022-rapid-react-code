@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
+
 import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
@@ -55,7 +55,7 @@ public class RobotContainer {
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier() ),driveTrain));
-    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(1),m_OI.getOperatorButton(1)),ballHandler));
+    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(m_OI.getOperatorStickSliderAxis()),m_OI.getOperatorButton(1),m_OI.getDriverButton(3)),ballHandler));
     robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
@@ -86,7 +86,7 @@ public class RobotContainer {
   
   public Command getAutonomousDriveCommand() {
     // this code should work but i am very skeptical of stuff like this so it might not
-    return new SequentialCommandGroup(new StartEndCommand(() -> ballHandler.ballHandlerRunning(1,false), () -> ballHandler.ballHandlerRunning(0,false),ballHandler).withTimeout(2),
+    return new SequentialCommandGroup(new RunCommand(() -> ballHandler.ballHandlerRunning(.5,true,false),ballHandler).withTimeout(2),
     new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(3),new RunCommand(() -> robotArm.moveArm(true), robotArm));
     
   }
