@@ -162,7 +162,7 @@ public class DPRCalculations {
         if (teamList.length < 1000) {
             computeOPRwithMMSE(mmse, teamList, teamsPerAlliance, playingTeams, scores);
         } else if (teamList.length >= 1000) {
-            computeOPRwithChloesky(teamList, teamsPerAlliance, playingTeams, scores);
+            computeOPRwithChloesky(mmse, teamList, teamsPerAlliance, playingTeams, scores, averageTeamOffenseScore);
         }
     }
 }
