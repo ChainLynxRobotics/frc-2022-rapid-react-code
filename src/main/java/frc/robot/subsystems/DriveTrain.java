@@ -153,7 +153,7 @@ public class DriveTrain extends SubsystemBase {
   // our drive command, this is what is called in robot.java
   // if this is not a command, it might be necessary to move this to a different command class where it is called by driveTrain
   public void drive(double turn, double throttle, boolean turnMode) {
-    m_drive.curvatureDrive(-turn*Math.abs(turn),throttle*Math.abs(throttle), turnMode);
+    m_drive.curvatureDrive(-turn*Math.abs(turn),throttle*Math.abs(throttle), !turnMode);
     
   }
 
