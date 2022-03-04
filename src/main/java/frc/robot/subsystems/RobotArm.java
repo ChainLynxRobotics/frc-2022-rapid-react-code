@@ -10,24 +10,17 @@ import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.RobotMap;
 import frc.robot.OI;
 
-public class RobotArm extends SubsystemBase {
+public class RobotArm extends RobotArmBase {
   /** Creates a new robotArm. */
   private CANSparkMax armMotor;
   private double offsetAngle; //in degrees
 
   private final double kPArm = 0.1;
   private final double kIArm = 0.01;
-  private final double kDArm = 0.9;
+  private final double kDArm = 0.5;
   private final double errorLimit = 1.5;
   
  
-  public void robotInit() {
-    errorSum = 0;
-    lastError = 0;
-    lastTimestamp = Timer.getFPGATimestamp();
-    encoderInit = armMotor.getEncoder().getPosition()*360;
-  }
-
     double error = 0;
     double errorSum = 0;
     double lastError = 0;
@@ -38,7 +31,11 @@ public class RobotArm extends SubsystemBase {
   public RobotArm() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
-    
+
+    errorSum = 0;
+    lastError = 0;
+    lastTimestamp = Timer.getFPGATimestamp();
+    encoderInit = armMotor.getEncoder().getPosition()*360;
   }
   
   @Override
@@ -55,18 +52,23 @@ public class RobotArm extends SubsystemBase {
 
       //as arm approaches setpoint, it will slow down
       error = setpoint - encoderPosition;
-      double dt = Timer.getFPGATimestamp() - lastTimestamp;
+      double dt = (Timer.getFPGATimestamp()/1000 - lastTimestamp)/1000;
 
       if (Math.abs(error) < errorLimit) {
         errorSum += error*dt;
       }
 
+
       double errorRate = (error - lastError)/dt;
       double newSpeed = kPArm*error + kIArm*errorSum + kDArm*errorRate;
 
+      if(Math.abs(setpoint-encoderPosition) < 0.1 && armMotor.get() < 0) {
+        armMotor.set() = 0;
+      }
+
       armMotor.set(newSpeed);
       lastError = error;
-      lastTimestamp = Timer.getFPGATimestamp();
+      lastTimestamp = Timer.getFPGATimestamp()/1000000;
   }
 
   public void raiseArm() {
@@ -75,6 +77,7 @@ public class RobotArm extends SubsystemBase {
 
   public void lowerArm()  {
     armMotor.set(-newSpeed);
+
     try {
       Thread.sleep(100);
     } catch (InterruptedException e) {
