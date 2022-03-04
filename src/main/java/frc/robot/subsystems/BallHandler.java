@@ -22,7 +22,7 @@ public class BallHandler extends SubsystemBase {
     
   }
   public void ballHandlerRunning(double dumpSpeed,boolean shootBall, boolean ballHandlerOff){
-    dumpSpeed = (dumpSpeed +1)/2
+    dumpSpeed = (dumpSpeed +1)/2;
     if(ballHandlerOff){
       ballHandlerMotor.set(0);
     }
