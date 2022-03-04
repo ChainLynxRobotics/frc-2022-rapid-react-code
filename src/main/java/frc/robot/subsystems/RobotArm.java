@@ -8,35 +8,25 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.Constants.RobotMap;
-import frc.robot.OI;
 
 public class RobotArm extends RobotArmBase {
-  /** Creates a new robotArm. */
-  private CANSparkMax armMotor;
-  private double offsetAngle; //in degrees
 
-  private final double kPArm = 0.1;
-  private final double kIArm = 0.01;
-  private final double kDArm = 0.5;
-  private final double errorLimit = 1.5;
+  private double offsetAngle; //in degrees
+  private final static double kPArm = 0.1;
+  private final static double kIArm = 0.01;
+  private final static double kDArm = 0.5;
+  private final static double errorLimit = 1.5;
   
  
-    double error = 0;
-    double errorSum = 0;
-    double lastError = 0;
-    double lastTimestamp = 0;
-    double setpoint = 0; 
-    double encoderInit = 0; 
-
-  public RobotArm() {
-    armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
-    armMotor.setIdleMode(IdleMode.kBrake);
-
-    errorSum = 0;
-    lastError = 0;
-    lastTimestamp = Timer.getFPGATimestamp();
-    encoderInit = armMotor.getEncoder().getPosition()*360;
-  }
+  private static double error = 0;
+  private static double errorSum = 0;
+  private static double lastError = 0;
+  private static double lastTimestamp = 0;
+  private static double setpoint = 0; 
+  private static double encoderInit = 0; 
+  private static double lastTimestamp = Timer.getFPGATimestamp();
+  private static double encoderInit = armMotor.getEncoder().getPosition()*360;
+ 
   
   @Override
   public void periodic() {
@@ -52,7 +42,7 @@ public class RobotArm extends RobotArmBase {
 
       //as arm approaches setpoint, it will slow down
       error = setpoint - encoderPosition;
-      double dt = (Timer.getFPGATimestamp()/1000 - lastTimestamp)/1000;
+      double dt = (Timer.getFPGATimestamp() - lastTimestamp);
 
       if (Math.abs(error) < errorLimit) {
         errorSum += error*dt;
@@ -68,7 +58,7 @@ public class RobotArm extends RobotArmBase {
 
       armMotor.set(newSpeed);
       lastError = error;
-      lastTimestamp = Timer.getFPGATimestamp()/1000000;
+      lastTimestamp = Timer.getFPGATimestamp();
   }
 
   public void raiseArm() {
