@@ -9,7 +9,7 @@ import Jama.Matrix;
 can either implement Cholesky decomposition or MMSE depending on type of dataset, where
 the former is recommended for large datasets, use MMSE for smaller datasets
 */
-public class DPRCalculations {
+public class OPRCalculations {
     public static int[] getTeams(int teamsPerAlliance, int[][][] playingTeams) {
         Set<Integer> sortedTeams = collections.synchronizedSortedSet( new TreeSet<>());
         for(int i = 0; i < playingTeams.length; i++) {
