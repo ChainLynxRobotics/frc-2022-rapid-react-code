@@ -77,4 +77,16 @@ public final class Constants {
       public static final double ROBOT_ARM_DELTA_SENSITIVITY = 20;
 
    } 
+   public enum JoystickScaling{
+      SQUARED_EXPONTENTIAL,
+      CUBIC_EXPONENTIAL,
+      LINEAR,
+      SQUARE_ROOTED,
+      CUBE_ROOTED,
+      LOGARITHMIC
+   }
+   public enum DriveStyle{
+      CUSTOM_TANK,
+      NORMAL_ARCADE
+   }
 }
