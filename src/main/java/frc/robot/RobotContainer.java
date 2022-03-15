@@ -19,6 +19,7 @@ import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
 import frc.robot.subsystems.RobotArm;
+import frc.robot.subsystems.RobotArmPID;
 import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 
 /**
@@ -40,7 +41,7 @@ public class RobotContainer {
     driveTrain = new DriveTrain();
     m_OI = new OI();
     ballHandler = new BallHandler();
-    robotArm = new RobotArm();
+    robotArm = new RobotArmPID();
     powerDistribution = new PowerDistribution();
     powerDistribution.clearStickyFaults();
     startCommands();
