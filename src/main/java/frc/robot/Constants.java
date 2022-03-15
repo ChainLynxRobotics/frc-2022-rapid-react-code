@@ -75,6 +75,7 @@ public final class Constants {
       // Robot arm math stuff
       public static final double ROBOT_ARM_EXPONENT_WEIGHT = 1.5;
       public static final double ROBOT_ARM_DELTA_SENSITIVITY = 20;
+    public static final double DEFAULT_DEADBAND = 0.02;
 
    } 
    public enum JoystickScaling{
@@ -83,7 +84,7 @@ public final class Constants {
       LINEAR,
       SQUARE_ROOTED,
       CUBE_ROOTED,
-      LOGARITHMIC
+      LOGARITHMIC, SQUARED_EXPONENTIAL
    }
    public enum DriveStyle{
       CUSTOM_TANK,

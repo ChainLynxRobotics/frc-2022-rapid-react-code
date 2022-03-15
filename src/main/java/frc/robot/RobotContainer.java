@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
+import frc.robot.Constants.DriveStyle;
+import frc.robot.Constants.JoystickScaling;
 import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
@@ -51,8 +52,8 @@ public class RobotContainer {
     }
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
-    driveTrainChooser.setDefaultOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier(),m_OI.getDriverButton(3)),driveTrain));
-    
+    driveTrainChooser.setDefaultOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
+    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
   }
   // this is where we will set up camera code
   private void configureCameras() {

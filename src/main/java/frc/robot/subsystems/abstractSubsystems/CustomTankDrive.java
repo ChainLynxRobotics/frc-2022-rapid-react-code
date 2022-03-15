@@ -7,6 +7,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
 public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoCloseable{
@@ -15,7 +16,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
     private double leftSpeed;
     private double rightSpeed;
 
-    CustomTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors){
+    public CustomTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors){
         // DO NOT USE NULL VALUES FOR MOTORS
         leftMotors = this.leftMotors;
         rightMotors = this.rightMotors;
@@ -66,6 +67,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
 
     public double scaleValue(double rawInput, double speedMultiplier, JoystickScaling scaleType){
         double scaledValue = rawInput;
+        scaledValue = MathUtil.applyDeadband(scaledValue, DriveConstants.DEFAULT_DEADBAND);
         // note if you have time to put whatever one you are using on top to make the code run faster
         switch(scaleType){
             case SQUARED_EXPONTENTIAL:
@@ -93,6 +95,12 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         }
         scaledValue *= speedMultiplier;
         return scaledValue;
+    }
+    public void tankDrive(double leftSpeed, double rightSpeed){
+
+        leftMotors.set(MathUtil.clamp(leftSpeed, -1, 1));
+        rightMotors.set(MathUtil.clamp(rightSpeed, -1, 1));
+        feed();
     }
 
 }
