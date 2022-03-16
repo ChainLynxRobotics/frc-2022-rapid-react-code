@@ -48,8 +48,8 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         double forwardPower = scaleValue(forwardSpeed, speedMultiplier, scaleType);
         switch(driveStyle){
             case CUSTOM_TANK:
-                rightSpeed = (forwardPower>0)?(forwardPower -(turnPower-(forwardPower/curveScaling)))/1+(forwardPower+curveScaling):(forwardPower -(turnPower-(forwardPower/curveScaling)))/1+(forwardPower-curveScaling);
-                leftSpeed = (forwardPower>0)?(forwardPower +(turnPower+(forwardPower/curveScaling)))/1+(forwardPower+curveScaling):(forwardPower +(turnPower+(forwardPower/curveScaling)))/1+(forwardPower-curveScaling);
+                rightSpeed = (forwardPower -(turnPower-(forwardPower/curveScaling)))/1+Math.abs(forwardPower+curveScaling);
+                leftSpeed =(forwardPower +(turnPower+(forwardPower/curveScaling)))/1+Math.abs(forwardPower+curveScaling);
                 break;
             default:
             // the arcade drive is the default, we hopefully wont have to use it though
