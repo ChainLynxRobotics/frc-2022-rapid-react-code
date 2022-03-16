@@ -1,5 +1,6 @@
 package frc.robot.subsystems.abstractSubsystems;
 
+import static java.util.Objects.requireNonNull;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.Sendable;
@@ -11,15 +12,16 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
 public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoCloseable{
-    private MotorControllerGroup leftMotors;
-    private MotorControllerGroup rightMotors;
+    private final MotorControllerGroup leftMotors;
+    private final MotorControllerGroup rightMotors;
     private double leftSpeed;
     private double rightSpeed;
 
     public CustomTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors){
-        // DO NOT USE NULL VALUES FOR MOTORS
-        leftMotors = this.leftMotors;
-        rightMotors = this.rightMotors;
+        requireNonNull(leftMotors, "leftmotors could not be null");
+        requireNonNull(rightMotors, "rightmotors could not be null");
+        this.leftMotors = leftMotors;
+        this.rightMotors = rightMotors;
         SendableRegistry.addChild(this, leftMotors);
         SendableRegistry.addChild(this, rightMotors);
     }
@@ -48,13 +50,13 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         double forwardPower = scaleValue(forwardSpeed, speedMultiplier, scaleType);
         switch(driveStyle){
             case CUSTOM_TANK:
-                rightSpeed = (forwardPower -(turnPower-(forwardPower/curveScaling)))/1+Math.abs(forwardPower+curveScaling);
-                leftSpeed =(forwardPower +(turnPower+(forwardPower/curveScaling)))/1+Math.abs(forwardPower+curveScaling);
+                rightSpeed = (forwardPower -(turnPower-(forwardPower/curveScaling)))/1+Math.abs(forwardPower/curveScaling);
+                leftSpeed =(forwardPower +(turnPower+(forwardPower/curveScaling)))/1+Math.abs(forwardPower/curveScaling);
                 break;
             default:
             // the arcade drive is the default, we hopefully wont have to use it though
-                rightSpeed = forwardPower-turnPower;
-                leftSpeed = forwardPower+turnPower;
+                rightSpeed = turnPower-forwardPower;
+                leftSpeed = turnPower+forwardPower;
         }
         rightSpeed = MathUtil.clamp(rightSpeed, -1, 1);
         leftSpeed = MathUtil.clamp(leftSpeed,-1,1);
@@ -92,6 +94,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
                 break;
         }
         scaledValue *= speedMultiplier;
+        MathUtil.clamp(scaledValue, -1, 1);
         return scaledValue;
     }
     public void tankDrive(double leftSpeed, double rightSpeed){

@@ -136,6 +136,7 @@ public class DriveTrain extends SubsystemBase {
     getHeading();
     SmartDashboard.putNumber("status/robotspeedinmeterspersecond", DriveConstants.WHEEL_CIRCUMFERENCE/(m_leftDriveFront.getEncoder().getCountsPerRevolution() *4)); // displays speed in meters per second
     SmartDashboard.putData("status/drivetraindata", m_drive);
+    m_drive.feed();
   }
   
   /*
