@@ -50,7 +50,8 @@ public class DriveTrain extends SubsystemBase {
   private RelativeEncoder rightEncoder;
   
   public DriveTrain() {
-    
+    System.out.println("method called");
+
     m_leftDriveFront = new CANSparkMax(RobotMap.MOTOR_LEFT_MASTER_ID, MotorType.kBrushless);
     m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
     m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
