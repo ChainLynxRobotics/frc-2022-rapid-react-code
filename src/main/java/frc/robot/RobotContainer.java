@@ -48,7 +48,7 @@ public class RobotContainer {
     powerDistribution.clearStickyFaults();
     chooseDriveStyle();
     startCommands();
-    configureCameras();
+    //configureCameras();
     }
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
