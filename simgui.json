@@ -24,6 +24,8 @@
       "/LiveWindow/RobotArm": "Subsystem",
       "/LiveWindow/Ungrouped/ADXRS450_Gyro[0]": "Gyro",
       "/LiveWindow/Ungrouped/DifferentialDrive[1]": "DifferentialDrive",
+      "/LiveWindow/Ungrouped/MotorControllerGroup[1]": "Motor Controller",
+      "/LiveWindow/Ungrouped/MotorControllerGroup[2]": "Motor Controller",
       "/LiveWindow/Ungrouped/PIDController[10]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[11]": "PIDController",
       "/LiveWindow/Ungrouped/PIDController[12]": "PIDController",
@@ -44,6 +46,7 @@
       "/LiveWindow/Ungrouped/Victor SPX [6]": "Motor Controller",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/RobotArm": "Subsystem",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser",
       "/SmartDashboard/status/drivetraindata": "DifferentialDrive",
       "/SmartDashboard/status/fieldlocation": "Field2d"
     },

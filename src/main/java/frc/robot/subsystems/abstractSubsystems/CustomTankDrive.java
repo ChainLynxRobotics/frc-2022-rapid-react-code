@@ -42,8 +42,6 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         builder.setSmartDashboardType("DifferentialDrive");
         builder.setActuator(true);
         builder.setSafeState(this::stopMotor);
-        builder.addDoubleProperty("Left Motor Speed", leftMotors::get, leftMotors::set);
-        builder.addDoubleProperty("Right Motor Speed", rightMotors::get, rightMotors::set);    
     }
     public void drive(double turnSpeed, double forwardSpeed, double speedMultiplier , JoystickScaling scaleType,double curveScaling, DriveStyle driveStyle){
         double turnPower = scaleValue(turnSpeed, speedMultiplier, scaleType);

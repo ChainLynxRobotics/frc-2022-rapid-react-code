@@ -54,6 +54,7 @@ public class RobotContainer {
     driveTrainChooser= new SendableChooser<>();
     driveTrainChooser.setDefaultOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
     driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
+    SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
   private void configureCameras() {

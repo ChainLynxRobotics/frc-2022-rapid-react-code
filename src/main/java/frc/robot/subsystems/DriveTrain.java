@@ -8,8 +8,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry; // i am very upset about the amount of effort it took me to get this single stupid import to work i hate my life life is suffering and pain
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
