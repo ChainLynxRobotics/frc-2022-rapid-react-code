@@ -89,6 +89,7 @@ public final class Constants {
    public enum DriveStyle{
       CUSTOM_TANK,
       NORMAL_ARCADE,
-      ARCADE_TANK //god i hate this name pick a real name that makes sense ishan this hurts my sould
+      ARCADE_TANK, //god i hate this name pick a real name that makes sense ishan this hurts my sould
+      IRIS_ARCADE_TANK
    }
 }

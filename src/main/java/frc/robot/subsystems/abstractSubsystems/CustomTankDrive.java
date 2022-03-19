@@ -57,7 +57,16 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
                 System.out.println("rightspeed"+rightSpeed+"leftspeed"+leftSpeed);
                 break;
             case ARCADE_TANK:
-                // put iris's code here
+                double Ls = turnPower +(Math.signum(turnPower)*forwardPower);
+                double Rs = turnPower -(Math.signum(turnPower)*forwardPower);
+                if(forwardPower < 0){
+                    leftSpeed = Ls;
+                    rightSpeed = turnPower +((MathUtil.clamp(Ls, -1, 1)-Ls)/2);
+                }
+                else{
+                    leftSpeed = turnPower +((MathUtil.clamp(Rs, -1, 1)-Rs)/2);
+                    rightSpeed = Rs;
+                }
                 break;
             default:
             // the arcade drive is the default, we hopefully wont have to use it though
