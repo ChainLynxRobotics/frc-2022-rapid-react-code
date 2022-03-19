@@ -8,7 +8,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry; // i am very upset about the amount of effort it took me to get this single stupid import to work i hate my life life is suffering and pain
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -17,10 +16,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.DriveStyle;
+import frc.robot.Constants.JoystickScaling;
 import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.SimulationConstants;
-
-
+import frc.robot.subsystems.abstractSubsystems.CustomTankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -42,7 +42,7 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
   private Boolean breakStatus;
-  private DifferentialDrive m_drive;
+  private CustomTankDrive m_drive;
   private Field2d fieldSim;
   private final DifferentialDriveOdometry m_odometry;
   private double cmPerTick;
@@ -50,7 +50,8 @@ public class DriveTrain extends SubsystemBase {
   private RelativeEncoder rightEncoder;
   
   public DriveTrain() {
-    
+    System.out.println("method called");
+
     m_leftDriveFront = new CANSparkMax(RobotMap.MOTOR_LEFT_MASTER_ID, MotorType.kBrushless);
     m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
     m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
@@ -59,7 +60,7 @@ public class DriveTrain extends SubsystemBase {
     rightEncoder= m_rightDriveFront.getEncoder();
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
-    m_drive = new DifferentialDrive(leftMotors, rightMotors);
+    m_drive = new CustomTankDrive(leftMotors, rightMotors);
     breakStatus = true;
    
     
@@ -135,6 +136,7 @@ public class DriveTrain extends SubsystemBase {
     getHeading();
     SmartDashboard.putNumber("status/robotspeedinmeterspersecond", DriveConstants.WHEEL_CIRCUMFERENCE/(m_leftDriveFront.getEncoder().getCountsPerRevolution() *4)); // displays speed in meters per second
     SmartDashboard.putData("status/drivetraindata", m_drive);
+    m_drive.feed();
   }
   
   /*
@@ -150,11 +152,10 @@ public class DriveTrain extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
   
-  // our drive command, this is what is called in robot.java
-  // if this is not a command, it might be necessary to move this to a different command class where it is called by driveTrain
-  public void drive(double turn, double throttle, boolean turnMode) {
-    m_drive.curvatureDrive(-turn*Math.abs(turn),throttle*Math.abs(throttle), !turnMode);
-    
+  // this method drives the calls the drive method if there are any issues it is probobly there
+  public void drive(double turn, double throttle, double scaling, JoystickScaling joystickStyle, double driveMultiplier, DriveStyle driveType ){
+    m_drive.drive(-turn, throttle, scaling, joystickStyle, driveMultiplier, driveType);
+    // turn is inverted because of a drive issue that may not become an issue
   }
 
   // this is necessary for a class in robot.java for the simulation
