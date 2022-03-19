@@ -8,6 +8,8 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,13 +17,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.DriveStyle;
-import frc.robot.Constants.JoystickScaling;
+
 import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
 import frc.robot.subsystems.RobotArm;
 import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
+
+import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.networktables.*;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,9 +42,11 @@ public class RobotContainer {
   private static OI m_OI;
   private static BallHandler ballHandler;
   private static boolean robotReversed;
-  private static SendableChooser<Command> driveTrainChooser;
   //The container for the robot. Contains subsystems, OI devices, and commands. 
   private PowerDistribution powerDistribution;
+  private ShuffleboardTab driveConstants;
+  private NetworkTableEntry constant1;
+  private NetworkTableEntry constant2;
   public RobotContainer() {
     driveTrain = new DriveTrain();
     m_OI = new OI();
@@ -46,16 +54,11 @@ public class RobotContainer {
     robotArm = new RobotArm();
     powerDistribution = new PowerDistribution();
     powerDistribution.clearStickyFaults();
-    chooseDriveStyle();
+    makeAutoPicker();
+    makeShuffleboardDriveConstants();
     startCommands();
-    //configureCameras();
+    configureCameras();
     }
-  private void chooseDriveStyle(){
-    driveTrainChooser= new SendableChooser<>();
-    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
-    driveTrainChooser.setDefaultOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
-    SmartDashboard.putData(driveTrainChooser);
-  }
   // this is where we will set up camera code
   private void configureCameras() {
     CameraServer.startAutomaticCapture("camera1",0);
@@ -64,10 +67,9 @@ public class RobotContainer {
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
-    driveTrain.setDefaultCommand(driveTrainChooser.getSelected());
-    // disabled operator commands as they threw an error when the operator joystick was not connected
-    //ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(m_OI.getOperatorStickSliderAxis()),m_OI.getOperatorButton(1),m_OI.getDriverButton(3)),ballHandler));
-    //robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
+    driveTrain.setDefaultCommand(new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1)*getDriveMultiplier(),m_OI.getDriverButton(2)?1*getDriveMultiplier():m_OI.getDriveStickRawAxis(0)*getDriveMultiplier(),m_OI.getDriverButton(3)),driveTrain));
+    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(m_OI.getOperatorStickSliderAxis()),m_OI.getOperatorButton(1),m_OI.getDriverButton(3)),ballHandler));
+    robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
@@ -80,6 +82,7 @@ public class RobotContainer {
     
     driveMultiplier =  m_OI.getDriverButton(1)?-1:driveMultiplier;
     robotReversed= m_OI.getDriverButton(1);// this is ugly and bad code: it works
+    driveMultiplier *= .84;
     
     SmartDashboard.putBoolean("status/robottReversed", robotReversed);
     SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
@@ -87,7 +90,7 @@ public class RobotContainer {
     return driveMultiplier;
   }
   public void updateShuffleboard(){
-    //SmartDashboard.putData(robotArm);
+    SmartDashboard.putData(robotArm);
 
   }
   public DriveTrain getRobotDrive(){
@@ -100,6 +103,19 @@ public class RobotContainer {
     new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(3),new RunCommand(() -> robotArm.moveArm(true), robotArm));
     
   }
+
+  public void makeAutoPicker() {
+    SendableChooser<Command> autoPicker = new SendableChooser<>();
+
+    SmartDashboard.putData(autoPicker);
+  }
+
+  public void makeShuffleboardDriveConstants() {
+    driveConstants = Shuffleboard.getTab("drive constants");
+    constant1 = driveConstants.add("constant one", 0.5).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    constant2 = driveConstants.add("constant two", 0.5).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    double constantUser1 = constant1.getDouble(1.0);
+    double constantUser2 = constant2.getDouble(1.0);
+  }
   
 }
-
