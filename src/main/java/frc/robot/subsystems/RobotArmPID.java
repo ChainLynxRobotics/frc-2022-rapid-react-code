@@ -11,9 +11,9 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 public class RobotArmPID extends RobotArmBase {
   /*private double upperAngle;
   private double lowerAngle;*/
-  private final static double kPArm = 0.1; 
-  private final static double kIArm = 0.01;
-  private final static double kDArm = 0.3;
+  protected final static double kPArm = 0.1; 
+  protected final static double kIArm = 0.01;
+  protected final static double kDArm = 0.3;
   private final static double errorLimit = 1.5;
   protected Timer armTimer;
   private static double error = 0;
@@ -34,6 +34,15 @@ public class RobotArmPID extends RobotArmBase {
   protected void otherConfigs() {
     armTimer = new Timer();
     armTimer.start();
+  }
+  
+  protected double[] getPIDCoefficients(double kPArm, double kIArm, double kDArm) {
+    int[] PIDCoefficients = new int[3];
+    PIDCoefficients[0] = kPArm;
+    PIDCoefficients[1] = kIArm;
+    PIDCoefficients[2] = kDArm;
+    
+    return PIDCoefficients;
   }
 
 @Override
