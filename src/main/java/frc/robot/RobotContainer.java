@@ -42,8 +42,8 @@ public class RobotContainer {
   public RobotContainer() {
     driveTrain = new DriveTrain();
     m_OI = new OI();
-    //ballHandler = new BallHandler();
-    //robotArm = new RobotArm();
+    ballHandler = new BallHandler();
+    robotArm = new RobotArm();
     powerDistribution = new PowerDistribution();
     powerDistribution.clearStickyFaults();
     chooseDriveStyle();
@@ -52,8 +52,8 @@ public class RobotContainer {
     }
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
-    driveTrainChooser.setDefaultOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
-    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
+    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
+    driveTrainChooser.setDefaultOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
     SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
@@ -65,6 +65,7 @@ public class RobotContainer {
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
     driveTrain.setDefaultCommand(driveTrainChooser.getSelected());
+    // disabled operator commands as they threw an error when the operator joystick was not connected
     //ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(m_OI.getOperatorStickSliderAxis()),m_OI.getOperatorButton(1),m_OI.getDriverButton(3)),ballHandler));
     //robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
    }

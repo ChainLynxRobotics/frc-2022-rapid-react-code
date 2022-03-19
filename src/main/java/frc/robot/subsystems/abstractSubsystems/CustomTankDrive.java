@@ -46,26 +46,35 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         builder.setSafeState(this::stopMotor);
     }
     public void drive(double turnSpeed, double forwardSpeed, double speedMultiplier , JoystickScaling scaleType,double curveScaling, DriveStyle driveStyle){
-        double turnPower = scaleValue(turnSpeed, speedMultiplier, scaleType);
-        double forwardPower = scaleValue(forwardSpeed, speedMultiplier, scaleType);
+        double turnPower = scaleValue(turnSpeed, scaleType);
+        double forwardPower = scaleValue(forwardSpeed, scaleType);
         switch(driveStyle){
             case CUSTOM_TANK:
-                rightSpeed = (forwardPower -(turnPower-(forwardPower/curveScaling)))/1+Math.abs(forwardPower/curveScaling);
-                leftSpeed =(forwardPower +(turnPower+(forwardPower/curveScaling)))/1+Math.abs(forwardPower/curveScaling);
+                
+                rightSpeed = (turnPower -(-forwardPower-(turnPower/curveScaling)))/(1+Math.abs(turnPower/curveScaling));
+                leftSpeed =(turnPower +(-forwardPower+(turnPower/curveScaling)))/(1+Math.abs(turnPower/curveScaling));
+                System.out.println("turnPower"+ turnPower+"forwardPower"+forwardPower);
+                System.out.println("rightspeed"+rightSpeed+"leftspeed"+leftSpeed);
+                break;
+            case ARCADE_TANK:
+                // put iris's code here
                 break;
             default:
             // the arcade drive is the default, we hopefully wont have to use it though
                 rightSpeed = turnPower-forwardPower;
                 leftSpeed = turnPower+forwardPower;
         }
+        rightSpeed *= speedMultiplier;
+        leftSpeed *= speedMultiplier;
         rightSpeed = MathUtil.clamp(rightSpeed, -1, 1);
         leftSpeed = MathUtil.clamp(leftSpeed,-1,1);
+        
         rightMotors.set(rightSpeed);
         leftMotors.set(leftSpeed);
         feed();
     }
 
-    public double scaleValue(double rawInput, double speedMultiplier, JoystickScaling scaleType){
+    public double scaleValue(double rawInput, JoystickScaling scaleType){
         double scaledValue = rawInput;
         scaledValue = MathUtil.applyDeadband(scaledValue, DriveConstants.DEFAULT_DEADBAND);
         // note if you have time to put whatever one you are using on top to make the code run faster
@@ -93,7 +102,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
             // default is linear
                 break;
         }
-        scaledValue *= speedMultiplier;
+        
         MathUtil.clamp(scaledValue, -1, 1);
         return scaledValue;
     }
