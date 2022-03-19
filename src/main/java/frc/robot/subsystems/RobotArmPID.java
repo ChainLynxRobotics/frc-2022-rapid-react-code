@@ -37,7 +37,7 @@ public class RobotArmPID extends RobotArmBase {
   }
   
   protected double[] getPIDCoefficients(double kPArm, double kIArm, double kDArm) {
-    int[] PIDCoefficients = new int[3];
+    double[] PIDCoefficients = new double[3];
     PIDCoefficients[0] = kPArm;
     PIDCoefficients[1] = kIArm;
     PIDCoefficients[2] = kDArm;
