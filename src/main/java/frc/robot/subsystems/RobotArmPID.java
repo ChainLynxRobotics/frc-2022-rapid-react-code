@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.lang.Math;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.NetworkTable;
@@ -24,9 +25,10 @@ public class RobotArmPID extends RobotArmBase {
   private double lastTimestamp = armTimer.get();
   private double newSpeed = 0;
   private double armSpeed = 0;
+  private double maxArmPower;
 
-  private ShuffleboardTab PIDTab = ShuffleBoard.getTab("PIDArm");
-  private NetworkTableEntry angularSpeedEntry = PIDTab.add("SpeedVelocity", 0).getEntry(); //use in periodic
+  //private ShuffleboardTab PIDTab = ShuffleBoard.getTab("PIDArm");
+  //private NetworkTableEntry angularSpeedEntry = PIDTab.add("SpeedVelocity", 0).getEntry(); //use in periodic
   
   @Override
   protected void otherConfigs() {
@@ -58,22 +60,23 @@ public class RobotArmPID extends RobotArmBase {
       //Kv*v*2pi*newSpeed/60 sec
       armSpeed = 473*12*2*Math.PI*newSpeed/60;
 
-      SmartDashboard.putNumber("angularSpeed", armSpeed);
-      angularSpeedEntry.setDouble(armSpeed);
+      //SmartDashboard.putNumber("angularSpeed", armSpeed);
+      //angularSpeedEntry.setDouble(armSpeed);
 
       lastError = error;
       lastTimestamp = armTimer.get();
   }
     
   @Override
-  protected void raiseArm(double maxArmPower) {
+  protected void raiseArm() {
+    
     System.out.println("robot arm raise called");
     setpoint = 75;
     armMotor.set(newSpeed);
   }
 
   @Override
-  protected void lowerArm(double maxArmPower)  {
+  protected void lowerArm()  {
     System.out.println("robot arm lower called");
     setpoint = -75;
     armMotor.set(-newSpeed); 
@@ -82,14 +85,14 @@ public class RobotArmPID extends RobotArmBase {
   @Override
   public void moveArm(boolean ArmUp) {
     if (ArmUp) {
-      raiseArm(.3);
+      raiseArm();
       if(!armStatus){
         armTimer.reset();
         armMotor.getEncoder().setPosition(0);
       }
       armStatus = true;
     } else {
-      lowerArm(-.1);
+      lowerArm();
       if(armStatus){
         armTimer.reset();
         armMotor.getEncoder().setPosition(0);
@@ -98,15 +101,8 @@ public class RobotArmPID extends RobotArmBase {
     }
     
   }
-  @Override
-  public void moveArmFirst() {
-    lowerArm(-.3);
-    if(armStatus){
-      armTimer.reset();
-    }
-    armStatus = false;
-    System.out.println("auto lower called");
-  }
+  
+
   
   
 }
