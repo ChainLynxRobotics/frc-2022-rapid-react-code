@@ -77,9 +77,6 @@ public class RobotContainer {
     SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*driveMultiplier:m_OI.getDriveStickRawAxis(0)*driveMultiplier); // i am sorry this was genuinely the easiest solution i could come up with
     return driveMultiplier;
   }
-  public void updateShuffleboard(){
-    SmartDashboard.putData(robotArm);
-  }
   
   public void updateShuffleboard(){
     SmartDashboard.putData(robotArm);
@@ -96,13 +93,11 @@ public class RobotContainer {
   }
   
    public void makeShuffleboardDriveConstants() {
-    driveConstants = Shuffleboard.getTab("drive constants");
-    kP = driveConstants.add("kPArm", robotArm.getkP(kPArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    kI = driveConstants.add("kIArm", robotArm.getkI(kIArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    kD = driveConstants.add("kDArm", robotArm.getkD(kDArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    double constantUser1 = kP.getDouble(1.0);
-    double constantUser2 = kI.getDouble(1.0);
-    double constantUser3 = kD.getDouble(1.0);
+    ShuffleboardTab driveConstants = Shuffleboard.getTab("drive constants")
+    driveConstants.add("kPArm", robotArm.getkP(kPArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveConstants.add("kIArm", robotArm.getkI(kIArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveConstants.add("kDArm", robotArm.getkD(kDArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    SmartDashboard.putData(driveConstants);
   }
   
 }
