@@ -99,10 +99,10 @@ public class RobotContainer {
     driveConstants = Shuffleboard.getTab("drive constants");
     kP = driveConstants.add("kPArm", robotArm.getkP(kPArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
     kI = driveConstants.add("kIArm", robotArm.getkI(kIArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-	  kD = driveConstants.add("kDArm", robotArm.getkD(kDArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    kD = driveConstants.add("kDArm", robotArm.getkD(kDArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
     double constantUser1 = kP.getDouble(1.0);
     double constantUser2 = kI.getDouble(1.0);
-	  double constantUser3 = kD.getDouble(1.0);
+    double constantUser3 = kD.getDouble(1.0);
   }
   
 }
