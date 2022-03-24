@@ -8,6 +8,7 @@
 
 package frc.robot;
 
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
 import frc.robot.subsystems.BallHandler;
@@ -53,7 +55,9 @@ public class RobotContainer {
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
     driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
-    driveTrainChooser.setDefaultOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
+    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
+    driveTrainChooser.addOption("arcadeTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.ARCADE_TANK), driveTrain));
+    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK),  driveTrain));
     SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
@@ -74,12 +78,12 @@ public class RobotContainer {
     // this makes the z axis slider go from 0->1 instead of -1->1
     double driveMultiplier = ((m_OI.getDriveStickRawAxis(m_OI.getDriveStickSliderAxis()) + 1) / 2);
     // this codes to have the robot break when the scaler sets the speed to 0
-    driveMultiplier = m_OI.getDriverButton(14)?0:driveMultiplier;
+    driveMultiplier = m_OI.getDriverButton(8)?0:driveMultiplier;
     
     driveTrain.setBreakStatus(driveMultiplier == 0);
     
-    driveMultiplier =  m_OI.getDriverButton(1)?-1:driveMultiplier;
-    robotReversed= m_OI.getDriverButton(1);// this is ugly and bad code: it works
+    driveMultiplier =  m_OI.getDriverButton(2)?-1:driveMultiplier;
+    robotReversed= m_OI.getDriverButton(2);// this is ugly and bad code: it works
     
     SmartDashboard.putBoolean("status/robottReversed", robotReversed);
     SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
