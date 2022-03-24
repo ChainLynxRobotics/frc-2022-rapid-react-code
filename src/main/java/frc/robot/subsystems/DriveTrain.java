@@ -20,7 +20,6 @@ import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
 import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.SimulationConstants;
-import frc.robot.subsystems.abstractSubsystems.CustomTankDrive;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -42,7 +41,7 @@ public class DriveTrain extends SubsystemBase {
   private MotorControllerGroup leftMotors;
   private MotorControllerGroup rightMotors;
   private Boolean breakStatus;
-  private CustomTankDrive m_drive;
+  private ArcadeTankDrive m_drive;
   private Field2d fieldSim;
   private final DifferentialDriveOdometry m_odometry;
   private double cmPerTick;
@@ -60,7 +59,7 @@ public class DriveTrain extends SubsystemBase {
     rightEncoder= m_rightDriveFront.getEncoder();
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);
     rightMotors = new MotorControllerGroup(m_rightDriveFront, m_rightDriveBack);
-    m_drive = new CustomTankDrive(leftMotors, rightMotors);
+    m_drive = new ArcadeTankDrive(leftMotors, rightMotors);
     breakStatus = true;
    
     
@@ -82,15 +81,13 @@ public class DriveTrain extends SubsystemBase {
             DriveConstants.WHEEL_RADIUS,
             DriveConstants.TRACK_WIDTH,
             SimulationConstants.MEASUREMENT_NOISE);
-      
-      
+          
       fieldSim = new Field2d();
       SmartDashboard.putData("Field", fieldSim);
           // to edit the values of this part of code edit the constants is Constants.java
       }
   }
 
-  
   public void setBreakStatus(boolean breakOn){
     if (breakOn != breakStatus && breakOn == true){
       m_leftDriveFront.setIdleMode(IdleMode.kBrake);
@@ -158,6 +155,7 @@ public class DriveTrain extends SubsystemBase {
     // turn is inverted because of a drive issue that may not become an issue
   }
 
+
   // this is necessary for a class in robot.java for the simulation
   // this is not important in any way outside of the simulation
   public double getDrawnCurrentAmps() {
@@ -208,6 +206,6 @@ public class DriveTrain extends SubsystemBase {
   }
   // this is for testing but more generic than other test code so probobly worth keeping in after the others are gone
   public void testDrive(double leftSpeed, double rightSpeed){
-    m_drive.tankDrive(leftSpeed, -rightSpeed);
+    m_drive.arcadeTankDrive(leftSpeed, -rightSpeed);
   }
 }
