@@ -14,7 +14,6 @@ import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
 
 
-//arcade controls integrated with tank drive math (maps joystick positions to x (turning) and y axis (position) speeds)
 public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoCloseable {
     private final MotorControllerGroup leftMotors;
     private final MotorControllerGroup rightMotors;
@@ -58,7 +57,7 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
     }
 
 
-//create arcadeTankDrive method (maps joystick positions to motor power, (xaxis, yaxis) -> (turnSpeed, positionSpeed))
+//create arcadeTankDrive method (maps joystick positions to motor power)
     public void drive(double turnSpeed, double forwardSpeed, double speedMultiplier, JoystickScaling scaleType, double curveScaling, DriveStyle driveStyle) {
         double turnPower = scaleValue(turnSpeed, scaleType);
         double forwardPower = scaleValue(forwardSpeed, scaleType);
@@ -131,7 +130,6 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
         feed();
     }
 
-    //scales joystick motor power inputs
     public double scaleValue(double rawInput, JoystickScaling scaleType) {
         double scaledValue = rawInput;
         scaledValue = MathUtil.applyDeadband(scaledValue, DriveConstants.DEFAULT_DEADBAND);
