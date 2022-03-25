@@ -36,15 +36,15 @@ public class RobotArmPID extends RobotArmBase {
     armTimer.start();
   }
   
-  public double getkP(double kPArm) {
+  public double getkP() {
     return kPArm;
   }
   
-  public double getkI(double kIArm) {
+  public double getkI() {
     return kIArm;
   }
   
-  public double getkD(double kDArm) {
+  public double getkD() {
     return kDArm;
   }
 
