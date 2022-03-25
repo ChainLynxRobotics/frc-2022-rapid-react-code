@@ -8,8 +8,13 @@
 
 package frc.robot;
 
+import java.util.Map;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -30,7 +35,7 @@ import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private static RobotArmBase robotArm;
+  private static RobotArmPID robotArm;
   private static DriveTrain driveTrain;
   private static OI m_OI;
   private static BallHandler ballHandler;
@@ -93,12 +98,13 @@ public class RobotContainer {
   }
   
    public void makeShuffleboardDriveConstants() {
-    ShuffleboardTab driveConstants = Shuffleboard.getTab("drive constants")
-    driveConstants.add("kPArm", robotArm.getkP(kPArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    driveConstants.add("kIArm", robotArm.getkI(kIArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    driveConstants.add("kDArm", robotArm.getkD(kDArm)).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
-    SmartDashboard.putData(driveConstants);
+    ShuffleboardTab driveConstants = Shuffleboard.getTab("drive constants");
+    driveConstants.add("kPArm", robotArm.getkP()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveConstants.add("kIArm", robotArm.getkI()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveConstants.add("kDArm", robotArm.getkD()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
   }
   
 }
+
+
 
