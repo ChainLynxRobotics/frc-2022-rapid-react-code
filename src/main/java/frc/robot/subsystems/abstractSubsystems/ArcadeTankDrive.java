@@ -73,20 +73,20 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
             leftSpeed = MathUtil.clamp(leftSpeed,-1,1);
         } else if (driveStyle == DriveStyle.ARCADE_TANK) {
 
-            leftSpeed = scaleFactorA*Math.abs(turnPower)+scaleFactorB*turnPower*turnPower;
-            rightSpeed = scaleFactorC*Math.abs(forwardPower)+scaleFactorD*forwardPower*forwardPower;
-
-            if (turnPower < 0) {
+            leftSpeed = scaleFactorA*Math.abs(turnSpeed)+scaleFactorB*turnSpeed*turnSpeed;
+            rightSpeed = scaleFactorC*Math.abs(forwardSpeed)+scaleFactorD*forwardSpeed*forwardSpeed;
+            
+            if (turnSpeed < 0) {
                 leftSpeed *= -1;
             }
 
-            if (forwardPower < 0) {
+            if (forwardSpeed < 0) {
                 rightSpeed *= -1;
             }
 
-            leftMotors.set(rightSpeed + leftSpeed);
-            rightMotors.set(rightSpeed - leftSpeed);
-
+            leftMotors.set(leftSpeed - rightSpeed);
+            rightMotors.set(rightSpeed + leftSpeed);
+            
         } else if (driveStyle == DriveStyle.SATURATED_ARCADE) { 
 
             double saturatedInput;
@@ -102,11 +102,12 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
             turnPower = turnPower/saturatedInput;
             forwardPower = forwardPower/saturatedInput;
 
-            leftSpeed = forwardPower+turnPower;
-            rightSpeed = forwardPower-turnPower;
+            rightSpeed = forwardPower+turnPower;
+            leftSpeed = turnPower-forwardPower;
 
         //default drive is arcade derived via linear interpolation 
         } else { 
+            
             if (turnSpeed > 0 && forwardSpeed > 0) {
                 leftSpeed = (1-forwardSpeed)*turnSpeed*scaleB+forwardSpeed;
                 rightSpeed = (forwardSpeed*(scaleB-scaleA-1)-scaleB)*turnSpeed+forwardSpeed;
@@ -121,9 +122,12 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
                 rightSpeed = -(1-forwardSpeed)*turnSpeed*scaleB-forwardSpeed;
             }
 
+            rightSpeed = forwardPower+turnPower;
+            leftSpeed = turnPower-forwardPower;
+
         }
 
-        if (driveStyle != DriveStyle.ARCADE_TANK) {
+        if (driveStyle != DriveStyle.ARCADE_TANK && driveStyle != DriveStyle.MOTOR_TEST_DRIVE) {
             leftMotors.set(leftSpeed);
             rightMotors.set(rightSpeed);
         }
