@@ -31,6 +31,14 @@ public class RobotContainer {
   private static BallHandler ballHandler;
   private static boolean robotReversed;
   private static SendableChooser<Command> driveTrainChooser;
+  
+  private NetworkTableEntry driveSFA;
+  private NetworkTableEntry driveSFB;
+  private NetworkTableEntry driveSFC;
+  private NetworkTableEntry driveSFD;
+  private NetworkTableEntry driveSA;
+  private NetworkTableEntry driveSB;
+
   //The container for the robot. Contains subsystems, OI devices, and commands. 
   private PowerDistribution powerDistribution;
   public RobotContainer() {
