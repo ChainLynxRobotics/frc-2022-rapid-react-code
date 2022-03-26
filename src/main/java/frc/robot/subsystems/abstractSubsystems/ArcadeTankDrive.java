@@ -19,12 +19,12 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
     private final MotorControllerGroup rightMotors;
     private double leftSpeed;
     private double rightSpeed;
-    private double scaleFactorA = 0.4;
-    private double scaleFactorB = 0.55;
-    private double scaleFactorC = 0.35;
-    private double scaleFactorD = 0.6;
-    private double scaleA = 0.65;
-    private double scaleB = 0.4;
+    private static double scaleFactorA = 0.4;
+    private static double scaleFactorB = 0.55;
+    private static double scaleFactorC = 0.35;
+    private static double scaleFactorD = 0.6;
+    private static double scaleA = 0.65;
+    private static double scaleB = 0.4;
 
     public ArcadeTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors) {
         requireNonNull(leftMotors, "leftmotors could not be null");
