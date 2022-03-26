@@ -11,6 +11,10 @@ import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
 import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
+import edu.wpi.first.wpilibj.shuffleboard.*;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import java.util.Map.*;
+import edu.wpi.first.networktables.*;
 
 
 /**
@@ -36,6 +40,7 @@ public class RobotContainer {
     //robotArm = new RobotArm();
     powerDistribution = new PowerDistribution();
     powerDistribution.clearStickyFaults();
+    makeShuffleboardDriveConstants();
     chooseDriveStyle();
     startCommands();
     //configureCameras();
@@ -80,6 +85,7 @@ public class RobotContainer {
   }
   public void updateShuffleboard(){
     //SmartDashboard.putData(robotArm);
+    updateConstants();
 
   }
   public DriveTrain getRobotDrive(){
@@ -90,6 +96,25 @@ public class RobotContainer {
     // this code should work but i am very skeptical of stuff like this so it might not
     return new SequentialCommandGroup(new RunCommand(() -> ballHandler.ballHandlerRunning(.5,true,false),ballHandler).withTimeout(2),
     new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(3));
+  }
+  
+  public void makeShuffleboardDriveConstants() {
+    ShuffleboardTab driveConstants = Shuffleboard.getTab("drive constants");
+    driveSFA = driveConstants.add("arcade drive scale factor A", ArcadeTankDrive.getSFA()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveSFB = driveConstants.add("arcade drive scale factor B", ArcadeTankDrive.getSFB()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveSFC = driveConstants.add("arcade drive scale factor C", ArcadeTankDrive.getSFC()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveSFD = driveConstants.add("arcade drive scale factor D", ArcadeTankDrive.getSFD()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveSA = driveConstants.add("arcade drive scale A", ArcadeTankDrive.getSA()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+    driveSB = driveConstants.add("arcade drive scale B", ArcadeTankDrive.getSB()).withWidget(BuiltInWidgets.kNumberSlider).withProperties(Map.of("min", 0, "max", 1)).getEntry();
+  }
+  
+  public void updateConstants() {
+    ArcadeTankDrive.setSFA(driveSFA.getDouble(0.0));
+    ArcadeTankDrive.setSFB(driveSFB.getDouble(0.0));
+    ArcadeTankDrive.setSFC(driveSFC.getDouble(0.0));
+    ArcadeTankDrive.setSFD(driveSFD.getDouble(0.0));
+    ArcadeTankDrive.setSA(driveSA.getDouble(0.0));
+    ArcadeTankDrive.setSB(driveSB.getDouble(0.0));
   }
   
 }
