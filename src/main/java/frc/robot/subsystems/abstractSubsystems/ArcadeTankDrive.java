@@ -156,6 +156,55 @@ public class ArcadeTankDrive extends RobotDriveBase implements Sendable, AutoClo
     public void arcadeTankDrive(double leftSpeed, double rightSpeed) {
         leftMotors.set(leftSpeed);
         rightMotors.set(rightSpeed);
+        
         feed();
+    }
+    
+     public static double getSFA() {
+        return scaleFactorA;
+    }
+
+    public static void setSFA(double SFA) {
+        scaleFactorA = SFA;
+    }
+
+    public static double getSFB() {
+        return scaleFactorB;
+    }
+
+    public static void setSFB(double SFB) {
+        scaleFactorB = SFB;
+    }
+
+    public static double getSFC() {
+        return scaleFactorC;
+    }
+
+    public static void setSFC(double SFC) {
+        scaleFactorC = SFC;
+    }
+
+    public static double getSFD() {
+        return scaleFactorD;
+    }
+
+    public static void setSFD(double SFD) {
+        scaleFactorD = SFD;
+    }
+
+    public static double getSA() {
+        return scaleA;
+    }
+
+    public static void setSA(double SA) {
+        scaleA = SA;
+    }
+
+    public static double getSB() {
+        return scaleB;
+    }
+
+    public static void setSB(double SB) {
+        scaleB = SB;
     }
 }
