@@ -51,6 +51,8 @@ public class RobotArm extends RobotArmBase {
 
   @Override
   public void moveArm(boolean ArmUp) {
+   
+    
     if (ArmUp) {
       raiseArm();
       if(!armStatus){

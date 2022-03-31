@@ -68,9 +68,9 @@ public class RobotContainer {
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
-    driveTrain.setDefaultCommand(driveTrainChooser.getSelected());
+    //driveTrain.setDefaultCommand(new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(0),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(1),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK),  driveTrain)/*driveTrainChooser.getSelected()*/);
     // disabled operator commands as they threw an error when the operator joystick was not connected
-    //ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickAxis(m_OI.getOperatorStickSliderAxis()),m_OI.getOperatorButton(1),m_OI.getDriverButton(3)),ballHandler));
+    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickSliderAxis(),m_OI.getOperatorButton(1),m_OI.getDriverButton(3)),ballHandler));
     //robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
@@ -82,7 +82,7 @@ public class RobotContainer {
     
     driveTrain.setBreakStatus(driveMultiplier == 0);
     
-    driveMultiplier =  m_OI.getDriverButton(2)?-1:driveMultiplier;
+    driveMultiplier =  m_OI.getDriverButton(2)?-1*driveMultiplier:1*driveMultiplier;// this line of code is REALLY UGLY but i am lazy so it stays
     robotReversed= m_OI.getDriverButton(2);// this is ugly and bad code: it works
     
     SmartDashboard.putBoolean("status/robottReversed", robotReversed);

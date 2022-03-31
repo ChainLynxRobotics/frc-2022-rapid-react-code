@@ -73,13 +73,12 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
                 rightSpeed = turnPower-forwardPower;
                 leftSpeed = turnPower+forwardPower;
         }
-        rightSpeed *= speedMultiplier;
-        leftSpeed *= speedMultiplier;
         rightSpeed = MathUtil.clamp(rightSpeed, -1, 1);
         leftSpeed = MathUtil.clamp(leftSpeed,-1,1);
-        
+        rightSpeed *= speedMultiplier;
+        leftSpeed *= speedMultiplier;
         rightMotors.set(rightSpeed);
-        leftMotors.set(leftSpeed);
+        leftMotors.set(-leftSpeed);
         feed();
     }
 
