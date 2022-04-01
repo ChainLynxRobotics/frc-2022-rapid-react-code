@@ -90,6 +90,8 @@ public final class Constants {
       CUSTOM_TANK,
       NORMAL_ARCADE,
       ARCADE_TANK, //god i hate this name pick a real name that makes sense ishan this hurts my sould
-      IRIS_ARCADE_TANK
+      IRIS_ARCADE_TANK,
+      LINEAR_INTERPOLATION_ARCADE,
+      SATURATED_ARCADE
    }
 }

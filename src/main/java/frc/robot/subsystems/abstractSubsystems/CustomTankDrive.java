@@ -16,6 +16,12 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
     private final MotorControllerGroup rightMotors;
     private double leftSpeed;
     private double rightSpeed;
+    private static double scaleFactorA = 0.4;
+    private static double scaleFactorB = 0.55;
+    private static double scaleFactorC = 0.35;
+    private static double scaleFactorD = 0.6;
+    private static double scaleA = 0.65;
+    private static double scaleB = 0.4;
 
     public CustomTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors){
         requireNonNull(leftMotors, "leftmotors could not be null");
@@ -45,8 +51,8 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         builder.setActuator(true);
         builder.setSafeState(this::stopMotor);
     }
-    public void drive(double turnSpeed, double forwardSpeed, double speedMultiplier , JoystickScaling scaleType,double curveScaling, DriveStyle driveStyle){
-        double turnPower = scaleValue(turnSpeed, scaleType);
+    public void drive(double forwardSpeed, double turnSpeed, double speedMultiplier , JoystickScaling scaleType,double curveScaling, DriveStyle driveStyle){
+        double turnPower = scaleValue(-turnSpeed, scaleType);
         double forwardPower = scaleValue(forwardSpeed, scaleType);
         switch(driveStyle){
             case CUSTOM_TANK:
@@ -57,28 +63,83 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
                 System.out.println("rightspeed"+rightSpeed+"leftspeed"+leftSpeed);
                 break;
             case ARCADE_TANK:
-                double Ls = turnPower +((!(Math.signum(turnPower) == 0)?Math.signum(turnPower):1)*forwardPower);
-                double Rs = turnPower -((!(Math.signum(turnPower) == 0)?Math.signum(turnPower):1)*forwardPower);
+                double Ls = forwardPower +((!(Math.signum(forwardPower) == 0)?Math.signum(forwardPower):1)*turnPower);
+                double Rs = forwardPower -((!(Math.signum(forwardPower) == 0)?Math.signum(forwardPower):1)*turnPower);
                 if(forwardPower > 0){
                     leftSpeed = Ls;
-                    rightSpeed = turnPower +((MathUtil.clamp(Ls, -1, 1)-Ls)/2);
+                    rightSpeed = forwardPower +((MathUtil.clamp(Ls, -1, 1)-Ls)/2);
                 }
                 else{
-                    leftSpeed = turnPower +((MathUtil.clamp(Rs, -1, 1)-Rs)/2);
+                    leftSpeed = forwardPower +((MathUtil.clamp(Rs, -1, 1)-Rs)/2);
                     rightSpeed = Rs;
                 }
                 break;
-            default:
+            case IRIS_ARCADE_TANK:
+            leftSpeed = scaleFactorA*Math.abs(turnSpeed)+scaleFactorB*turnSpeed*turnSpeed;
+            rightSpeed = scaleFactorC*Math.abs(forwardSpeed)+scaleFactorD*forwardSpeed*forwardSpeed;
+            
+            if (turnSpeed < 0) {
+                leftSpeed *= -1;
+            }
+
+            if (forwardSpeed < 0) {
+                rightSpeed *= -1;
+            }
+
+            leftMotors.set(leftSpeed - rightSpeed);
+            rightMotors.set(rightSpeed + leftSpeed);
+                break;
+            case LINEAR_INTERPOLATION_ARCADE:
+            if (turnSpeed > 0 && forwardSpeed > 0) {
+                leftSpeed = (1-forwardSpeed)*turnSpeed*scaleB+forwardSpeed;
+                rightSpeed = (forwardSpeed*(scaleB-scaleA-1)-scaleB)*turnSpeed+forwardSpeed;
+            } else if (turnSpeed < 0 && forwardSpeed > 0) {
+                leftSpeed = (forwardSpeed*(scaleB-scaleA-1)-scaleB)*turnSpeed+forwardSpeed;
+                rightSpeed = (1-forwardSpeed)*turnSpeed*scaleB+forwardSpeed;
+            } else if (turnSpeed < 0 && forwardSpeed < 0) {
+                leftSpeed = -(1-forwardSpeed)*turnSpeed*scaleB-forwardSpeed;
+                rightSpeed = -(forwardSpeed*(scaleB-scaleA-1)-scaleB)*turnSpeed-forwardSpeed;
+            } else {
+                leftSpeed = -(forwardSpeed*(scaleB-scaleA-1)-scaleB)*turnSpeed-forwardSpeed;
+                rightSpeed = -(1-forwardSpeed)*turnSpeed*scaleB-forwardSpeed;
+            }
+
+            rightSpeed = forwardPower+turnPower;
+            leftSpeed = turnPower-forwardPower;
+            rightMotors.set(rightSpeed);
+            leftMotors.set(leftSpeed);
+            break;
+        case SATURATED_ARCADE:
+        double saturatedInput;
+        double greaterInput = Math.max(Math.abs(turnSpeed), Math.abs(forwardSpeed));
+        double smallerInput = Math.min(Math.abs(turnSpeed), Math.abs(forwardSpeed));
+
+        if (greaterInput > 0.0) {
+            saturatedInput = smallerInput/greaterInput + 1;
+        } else {
+            saturatedInput = 1.0;
+        }
+
+        turnPower = turnPower/saturatedInput;
+        forwardPower = forwardPower/saturatedInput;
+
+        rightSpeed = forwardPower+turnPower;
+        leftSpeed = turnPower-forwardPower;
+            break;
+        default:
             // the arcade drive is the default, we hopefully wont have to use it though
-                rightSpeed = turnPower-forwardPower;
-                leftSpeed = turnPower+forwardPower;
+                rightSpeed = forwardPower-turnPower;
+                leftSpeed = forwardPower+turnPower;
         }
         rightSpeed = MathUtil.clamp(rightSpeed, -1, 1);
         leftSpeed = MathUtil.clamp(leftSpeed,-1,1);
         rightSpeed *= speedMultiplier;
         leftSpeed *= speedMultiplier;
+
+    if (driveStyle != DriveStyle.LINEAR_INTERPOLATION_ARCADE && driveStyle != DriveStyle.IRIS_ARCADE_TANK) {
         rightMotors.set(rightSpeed);
         leftMotors.set(-leftSpeed);
+    }
         feed();
     }
 
@@ -103,7 +164,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
             case LOGARITHMIC:
                 MathUtil.applyDeadband(scaledValue, .1);
                 // idk what this math even is just ignore it and move on with your life
-                scaledValue= (scaledValue>0)?(Math.log(scaledValue)/Math.E)+1:(Math.log(-scaledValue)/Math.E)+1;
+                scaledValue= (scaledValue>0)?(Math.log(scaledValue)/Math.log(Math.E))+1:(Math.log(-scaledValue)/Math.log(Math.E))+1;
                 break;
             
             default:

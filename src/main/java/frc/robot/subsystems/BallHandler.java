@@ -16,13 +16,13 @@ public class BallHandler extends SubsystemBase {
   /** Creates a new Intake. */
   
   private WPI_VictorSPX ballHandlerMotor;
-  
+
   public BallHandler() {
     ballHandlerMotor = new WPI_VictorSPX(RobotMap.BALLHANDLER_MOTOR_ID);
     
   }
-  public void ballHandlerRunning(double dumpSpeed,boolean shootBall, boolean ballHandlerOff){
-    dumpSpeed = (-dumpSpeed +1)/2;
+  public void ballHandlerRunning(double dumpSpeed,boolean shootBall, boolean ballHandlerOff, boolean isButtonTwoPressed){
+    dumpSpeed = (dumpSpeed +1)/2;
     if(ballHandlerOff){
       ballHandlerMotor.set(0);
     }
@@ -30,9 +30,16 @@ public class BallHandler extends SubsystemBase {
     else if (shootBall){
       ballHandlerMotor.set(dumpSpeed);
     }
-    else{
+    else if (isButtonTwoPressed) {
+      ballHandlerMotor.set(-0.4);
+    }
+    
+    else {
       ballHandlerMotor.set(-1);
     }
+
+    
+
     
     SmartDashboard.putBoolean("status/ballHandlerOn", ballHandlerOff);
     SmartDashboard.putNumber("status/ballDumpSpeed", dumpSpeed);
