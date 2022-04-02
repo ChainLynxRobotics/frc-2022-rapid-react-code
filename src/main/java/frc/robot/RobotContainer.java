@@ -23,7 +23,8 @@ import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
 import frc.robot.subsystems.RobotArm;
-import frc.robot.subsystems.RobotArmPID;
+import frc.robot.subsystems.RobotArmNew;
+import frc.robot.subsystems.RobotArm;
 import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 
 /**
@@ -70,7 +71,7 @@ public class RobotContainer {
    private void startCommands() {
     driveTrain.setDefaultCommand(new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(0),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(1),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,(m_OI.getDriverButton(7)?DriveStyle.ARCADE_TANK:DriveStyle.NORMAL_ARCADE)),  driveTrain)/*driveTrainChooser.getSelected()*/);
     // disabled operator commands as they threw an error when the operator joystick was not connected
-    //ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickSliderAxis(),m_OI.getOperatorButton(1),m_OI.getOperatorButton(3),m_OI.getOperatorButton(2)),ballHandler));
+    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickSliderAxis(),m_OI.getOperatorButton(1),m_OI.getOperatorButton(3),m_OI.getOperatorButton(2)),ballHandler));
     robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed

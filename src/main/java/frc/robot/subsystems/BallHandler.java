@@ -22,7 +22,7 @@ public class BallHandler extends SubsystemBase {
     
   }
   public void ballHandlerRunning(double dumpSpeed,boolean shootBall, boolean ballHandlerOff, boolean isButtonTwoPressed){
-    dumpSpeed = (dumpSpeed +1)/2;
+    dumpSpeed = -(dumpSpeed +1)/2;
     if(ballHandlerOff){
       ballHandlerMotor.set(0);
     }
@@ -31,11 +31,11 @@ public class BallHandler extends SubsystemBase {
       ballHandlerMotor.set(dumpSpeed);
     }
     else if (isButtonTwoPressed) {
-      ballHandlerMotor.set(-0.4);
+      ballHandlerMotor.set(0.4);
     }
     
     else {
-      ballHandlerMotor.set(-1);
+      ballHandlerMotor.set(1);
     }
 
     

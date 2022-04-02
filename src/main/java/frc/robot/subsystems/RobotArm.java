@@ -21,27 +21,13 @@ public class RobotArm extends RobotArmBase {
   @Override
   protected void raiseArm() {
     
-    System.out.println("robot arm raise called");
-    if(armTimer.get() < 1.5){
-      armMotor.set(.3);
-      }
-      else{
-        armMotor.set(0.05);
-      }
-    
+    armMotor.set(.3);
+    System.out.println("arm raised");
   }
   @Override
   protected void lowerArm()  {
   
-    System.out.println("robot arm lower called");
-    if(armTimer.get() < 2){
-    armMotor.set(-.1);
-    }
-    else{
-      armMotor.set(-
-      0.05
-      );
-    }
+    armMotor.set(-.15);
     
   }
 

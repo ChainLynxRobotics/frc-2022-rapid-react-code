@@ -56,6 +56,10 @@ public class DriveTrain extends SubsystemBase {
     m_leftDriveBack= new CANSparkMax(RobotMap.MOTOR_LEFT_SLAVE_ID, MotorType.kBrushless);
     m_rightDriveFront= new CANSparkMax(RobotMap.MOTOR_RIGHT_MASTER_ID, MotorType.kBrushless);
     m_rightDriveBack = new CANSparkMax(RobotMap.MOTOR_RIGHT_SLAVE_ID, MotorType.kBrushless); 
+    m_leftDriveFront.setSmartCurrentLimit(40);
+    m_leftDriveBack.setSmartCurrentLimit(40);
+    m_rightDriveFront.setSmartCurrentLimit(40);
+    m_rightDriveBack.setSmartCurrentLimit(40);
     leftEncoder= m_leftDriveFront.getEncoder();
     rightEncoder= m_rightDriveFront.getEncoder();
     leftMotors = new MotorControllerGroup(m_leftDriveFront, m_leftDriveBack);

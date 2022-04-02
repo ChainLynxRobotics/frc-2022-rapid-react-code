@@ -19,8 +19,8 @@ public abstract class RobotArmBase extends SubsystemBase {
   public RobotArmBase() {
     armMotor = new CANSparkMax(RobotMap.ROBOT_ARM_MOTOR_ID, MotorType.kBrushless);
     armMotor.setIdleMode(IdleMode.kBrake);
-    //armMotor.setSmartCurrentLimit(5);
-    armMotor.setSmartCurrentLimit(1, 200, 50);
+    armMotor.setSmartCurrentLimit(40);
+    
 
     // change this to true after code is tested
     armStatus = true;
@@ -40,5 +40,7 @@ public abstract class RobotArmBase extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    System.out.println("motor temperature" + armMotor.getMotorTemperature());
+    
   }
 }
