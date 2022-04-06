@@ -6,6 +6,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.Constants.DriveConstants;
@@ -16,8 +17,10 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
     private final MotorControllerGroup rightMotors;
     private double leftSpeed;
     private double rightSpeed;
+    protected Timer driveTimer;
 
     public CustomTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors){
+        driveTimer = new Timer();
         requireNonNull(leftMotors, "leftmotors could not be null");
         requireNonNull(rightMotors, "rightmotors could not be null");
         this.leftMotors = leftMotors;
@@ -80,7 +83,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         
         rightMotors.set(rightSpeed);
         leftMotors.set(leftSpeed);
-        
+
         if(driveBack) {
             driveTimer.reset();
             driveTimer.start();
@@ -89,7 +92,6 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
             leftMotors.set(0.5);
             }
         }
-        
         feed();
     }
 
@@ -114,7 +116,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
             case LOGARITHMIC:
                 MathUtil.applyDeadband(scaledValue, .1);
                 // idk what this math even is just ignore it and move on with your life
-                scaledValue= (scaledValue>0)?(Math.log(scaledValue)/Math.E)+1:(Math.log(-scaledValue)/Math.E)+1;
+                scaledValue= (scaledValue>0)?(Math.log(scaledValue)/Math.log(Math.E))+1:(Math.log(-scaledValue)/Math.log(Math.E))+1;
                 break;
             
             default:
