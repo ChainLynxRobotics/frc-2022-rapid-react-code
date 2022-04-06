@@ -54,10 +54,10 @@ public class RobotContainer {
     }
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
-    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
-    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
-    driveTrainChooser.addOption("arcadeTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.ARCADE_TANK), driveTrain));
-    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK),  driveTrain));
+    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE, m_OI.lowerHubShoot()),driveTrain));
+    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK, m_OI.lowerHubShoot()), driveTrain));
+    driveTrainChooser.addOption("arcadeTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()), driveTrain));
+    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()),  driveTrain));
     SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
