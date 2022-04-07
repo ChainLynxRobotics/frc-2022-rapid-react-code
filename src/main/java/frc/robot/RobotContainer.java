@@ -56,10 +56,10 @@ public class RobotContainer {
     }
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
-    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE),driveTrain));
-    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK), driveTrain));
-    driveTrainChooser.addOption("arcadeTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.ARCADE_TANK), driveTrain));
-    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK),  driveTrain));
+    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE,m_OI.lowerHubShoot()),driveTrain));
+    driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK, m_OI.lowerHubShoot()), driveTrain));
+    driveTrainChooser.addOption("arcadeTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()), driveTrain));
+    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()),  driveTrain));
     SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
@@ -69,7 +69,7 @@ public class RobotContainer {
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
-    driveTrain.setDefaultCommand(new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(0),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(1),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,(m_OI.getDriverButton(7)?DriveStyle.ARCADE_TANK:DriveStyle.NORMAL_ARCADE)),  driveTrain)/*driveTrainChooser.getSelected()*/);
+    driveTrain.setDefaultCommand(new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(0),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(1),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,(m_OI.getDriverButton(7)?DriveStyle.ARCADE_TANK:DriveStyle.NORMAL_ARCADE), m_OI.lowerHubShoot()),  driveTrain)/*driveTrainChooser.getSelected()*/);
     // disabled operator commands as they threw an error when the operator joystick was not connected
     ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickSliderAxis(),m_OI.getOperatorButton(1),m_OI.getOperatorButton(3),m_OI.getOperatorButton(2)),ballHandler));
     robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));

@@ -23,7 +23,7 @@ private final  PIDController pid = new PIDController(0.6, 0, 0);
   protected Timer armTimer;
   public double setpoint;
   public double encoderPosition = 0;
-  private final Encoder encoder = (Encoder) armMotor.getEncoder();
+  private final Encoder encoder = (Encoder) armMotor.getEncoder(); //this won't work
   @Override
   protected void otherConfigs() {
     

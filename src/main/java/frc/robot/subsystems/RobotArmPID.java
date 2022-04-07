@@ -28,7 +28,7 @@ public class RobotArmPID extends RobotArmBase {
   }
     
   @Override
-  public void periodic() {
+  public void periodic() { //not being scheduled correctly
     encoderPosition += armMotor.getEncoder().getPosition()*360;
     error = setpoint - encoderPosition;
     dt = armTimer.get() - lastTimestamp;

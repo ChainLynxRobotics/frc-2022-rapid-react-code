@@ -41,6 +41,7 @@ public abstract class RobotArmBase extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     System.out.println("motor temperature" + armMotor.getMotorTemperature());
+
     
   }
 }

@@ -30,6 +30,14 @@ public class OI {
     public int getOperatorStickSliderAxis(){
         return operatorStick.getAxisCount()-1;
     }
+
+    public boolean lowerHubShoot() {
+        if(operatorStick.getRawButtonPressed(10)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     // i hate everything about this piece of code but i am not going to declare classwide variables for every button so i will just cry
     public boolean getOperatorButtons67Toggle(){
         if(operatorStick.getRawButtonPressed(6)){
