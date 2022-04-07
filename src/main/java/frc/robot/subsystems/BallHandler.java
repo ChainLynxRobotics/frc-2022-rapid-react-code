@@ -35,7 +35,7 @@ public class BallHandler extends SubsystemBase {
     }
     
     else {
-      ballHandlerMotor.set(1);
+      ballHandlerMotor.set(-.75);
     }
 
     
