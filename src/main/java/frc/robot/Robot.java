@@ -40,7 +40,11 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     robotContainer = new RobotContainer();
-    
+    try {
+    robotContainer.configureCameras();
+    } catch (Exception e) {
+      System.out.println("failed to configure cameras");
+    }
     setNetworkTablesFlushEnabled(true);
   }
   @Override

@@ -62,7 +62,7 @@ public class RobotContainer {
     SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
-  private void configureCameras() {
+  public void configureCameras() {
     CameraServer.startAutomaticCapture("camera1",0);
    // CameraServer.startAutomaticCapture("camera2",1);
   }
