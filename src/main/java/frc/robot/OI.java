@@ -30,9 +30,8 @@ public class OI {
     public int getOperatorStickSliderAxis(){
         return operatorStick.getAxisCount()-1;
     }
-
     public boolean lowerHubShoot() {
-        if(operatorStick.getRawButtonPressed(10)) {
+        if (operatorStick.getRawButtonPressed(10)) {
             return true;
         } else {
             return false;

@@ -24,8 +24,6 @@ import frc.robot.subsystems.BallHandler;
 import frc.robot.subsystems.DriveTrain;
 
 import frc.robot.subsystems.RobotArm;
-import frc.robot.subsystems.RobotArmNew;
-import frc.robot.subsystems.RobotArm;
 import frc.robot.subsystems.abstractSubsystems.RobotArmBase;
 
 /**
@@ -57,23 +55,24 @@ public class RobotContainer {
     }
   private void chooseDriveStyle(){
     driveTrainChooser= new SendableChooser<>();
-    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE,m_OI.lowerHubShoot()),driveTrain));
+    driveTrainChooser.addOption("arcadeDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONTENTIAL,4,DriveStyle.NORMAL_ARCADE, m_OI.lowerHubShoot()),driveTrain));
     driveTrainChooser.addOption("customTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.CUSTOM_TANK, m_OI.lowerHubShoot()), driveTrain));
     driveTrainChooser.addOption("arcadeTankDrive", new RunCommand(() -> driveTrain.drive(m_OI.getDriveStickRawAxis(1),m_OI.getDriverButton(2)?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()), driveTrain));
-    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()), driveTrain));
+    driveTrainChooser.setDefaultOption("EthanDrive", new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(1),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(0),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.ARCADE_TANK, m_OI.lowerHubShoot()),  driveTrain));
     SmartDashboard.putData(driveTrainChooser);
   }
   // this is where we will set up camera code
   private void configureCameras() {
     CameraServer.startAutomaticCapture("camera1",0);
+   // CameraServer.startAutomaticCapture("camera2",1);
   }
 
   // this is the method where we are going to start all our commands to reduce clutter in RobotContainer method
    private void startCommands() {
-    driveTrain.setDefaultCommand(new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(0),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(1),getDriveMultiplier(),JoystickScaling.SQUARED_EXPONENTIAL,4,(m_OI.getDriverButton(7)?DriveStyle.ARCADE_TANK:DriveStyle.NORMAL_ARCADE), m_OI.lowerHubShoot()),  driveTrain)/*driveTrainChooser.getSelected()*/);
+    driveTrain.setDefaultCommand(new RunCommand(() ->driveTrain.drive(m_OI.getDriveStickRawAxis(0),(m_OI.getDriverButton(2)||m_OI.getDriverButton(1))?1:m_OI.getDriveStickRawAxis(1),getDriveMultiplier(),JoystickScaling.LINEAR,4,m_OI.getDriverButton(7)?DriveStyle.NORMAL_ARCADE:DriveStyle.NORMAL_ARCADE, m_OI.lowerHubShoot()),  driveTrain)/*driveTrainChooser.getSelected()*/);
     // disabled operator commands as they threw an error when the operator joystick was not connected
-    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickSliderAxis(),m_OI.getOperatorButton(1),m_OI.getOperatorButton(3),m_OI.getOperatorButton(2)),ballHandler));
-    robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle()), robotArm));
+    ballHandler.setDefaultCommand(new RunCommand(() -> ballHandler.ballHandlerRunning(m_OI.getOperatorStickSliderAxis(),m_OI.getOperatorButton(1),m_OI.getDriverButton(2),m_OI.getOperatorButton(3)),ballHandler));
+    robotArm.setDefaultCommand(new RunCommand(() -> robotArm.moveArm(m_OI.getOperatorButtons67Toggle(), getOperatorMultiplier()), robotArm));
    }
    // method to allow for constant multiplier for drivetrain speed
    private double getDriveMultiplier(){
@@ -83,6 +82,8 @@ public class RobotContainer {
     driveMultiplier = m_OI.getDriverButton(8)?0:driveMultiplier;
     
     driveTrain.setBreakStatus(driveMultiplier == 0);
+
+    //This comment is placed here just so there is a change to commit, delete if needed
     
     driveMultiplier =  m_OI.getDriverButton(2)?-1*driveMultiplier:1*driveMultiplier;// this line of code is REALLY UGLY but i am lazy so it stays
     robotReversed= m_OI.getDriverButton(2);// this is ugly and bad code: it works
@@ -91,6 +92,17 @@ public class RobotContainer {
     SmartDashboard.putNumber("status/speedmultiplier", driveMultiplier);
     SmartDashboard.putNumber("status/speedpercentageoutput", m_OI.getDriverButton(2)?1*driveMultiplier:m_OI.getDriveStickRawAxis(0)*driveMultiplier); // i am sorry this was genuinely the easiest solution i could come up with
     return driveMultiplier;
+  }
+
+  private double getOperatorMultiplier() {
+    double operatorMultiplier = 1;
+    if (m_OI.getOperatorButton(3)) {
+      operatorMultiplier = 0;
+    } else if (m_OI.getOperatorButton(2)) {
+      operatorMultiplier = 0.2;
+    }
+
+    return operatorMultiplier;
   }
   public void updateShuffleboard(){
     //SmartDashboard.putData(robotArm);
@@ -102,8 +114,8 @@ public class RobotContainer {
   
   public Command getAutonomousDriveCommand() {
     // this code should work but i am very skeptical of stuff like this so it might not
-    return new SequentialCommandGroup(new WaitCommand(10),new RunCommand(() -> ballHandler.ballHandlerRunning(.5,true,false,false),ballHandler).withTimeout(2),
-    new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(3),new RunCommand(() -> robotArm.moveArm(true), robotArm));
+    return new SequentialCommandGroup(new WaitCommand(10),new RunCommand(() -> ballHandler.ballHandlerRunning(1,true,false,false),ballHandler).withTimeout(1),
+    new RunCommand(() -> driveTrain.testDrive(-0.4, -0.4), driveTrain).withTimeout(3),new RunCommand(() -> robotArm.moveArm(true, getOperatorMultiplier()), robotArm));
     
   }
   

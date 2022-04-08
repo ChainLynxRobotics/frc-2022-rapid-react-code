@@ -35,11 +35,8 @@ public class BallHandler extends SubsystemBase {
     }
     
     else {
-      ballHandlerMotor.set(-.75);
+      ballHandlerMotor.set(.75);
     }
-
-    
-
     
     SmartDashboard.putBoolean("status/ballHandlerOn", ballHandlerOff);
     SmartDashboard.putNumber("status/ballDumpSpeed", dumpSpeed);

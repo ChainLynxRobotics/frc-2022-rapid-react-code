@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
+import edu.wpi.first.wpilibj.Timer;
 public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoCloseable{
     private final MotorControllerGroup leftMotors;
     private final MotorControllerGroup rightMotors;
@@ -144,11 +145,11 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         rightMotors.set(rightSpeed);
         leftMotors.set(-leftSpeed);
     }
-
-    if(driveBack) {
+    
+    if (driveBack) {
         driveTimer.reset();
         driveTimer.start();
-        while (driveTimer.get() < 0.8) {
+        while (driveTimer.get() < 0.2) {
             rightMotors.set(0.5);
             leftMotors.set(-0.5);
         }
