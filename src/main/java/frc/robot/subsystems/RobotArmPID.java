@@ -56,33 +56,33 @@ public class RobotArmPID extends RobotArmBase {
 
 
   @Override
-  protected void raiseArm() {
+  protected void raiseArm(double operatorMultiplier) {
     setpoint = 0;
     System.out.println("robot arm raise called");
-    armMotor.set(newSpeed); //.3 
+    armMotor.set(newSpeed*operatorMultiplier); //.3 
     
   }
   @Override
-  protected void lowerArm()  {
+  protected void lowerArm(double operatorMultiplier)  {
     setpoint = 75;
     System.out.println("robot arm lower called");
-    armMotor.set(-newSpeed); //-.3
+    armMotor.set(-newSpeed*operatorMultiplier); //-.3
     
     
   }
 
   @Override
-  public void moveArm(boolean ArmUp) {
+  public void moveArm(boolean ArmUp, double operatorMultiplier) {
    
     
     if (ArmUp) {
-      raiseArm();
+      raiseArm(operatorMultiplier);
       if(!armStatus){
         armTimer.reset();
       }
       armStatus = true;
     } else {
-      lowerArm();
+      lowerArm(operatorMultiplier);
       if(armStatus){
         armTimer.reset();
       }
