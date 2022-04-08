@@ -82,6 +82,8 @@ public class RobotContainer {
     driveMultiplier = m_OI.getDriverButton(8)?0:driveMultiplier;
     
     driveTrain.setBreakStatus(driveMultiplier == 0);
+
+    //This comment is placed here just so there is a change to commit, delete if needed
     
     driveMultiplier =  m_OI.getDriverButton(2)?-1*driveMultiplier:1*driveMultiplier;// this line of code is REALLY UGLY but i am lazy so it stays
     robotReversed= m_OI.getDriverButton(2);// this is ugly and bad code: it works
