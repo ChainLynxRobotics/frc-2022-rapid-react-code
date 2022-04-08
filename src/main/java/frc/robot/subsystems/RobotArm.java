@@ -19,28 +19,28 @@ public class RobotArm extends RobotArmBase {
   }
     
   @Override
-  protected void raiseArm() {
+  protected void raiseArm(double operatorMultiplier) {
     
-    armMotor.set(.3);
+    armMotor.set(.3*operatorMultiplier);
     System.out.println("arm raised");
   }
   @Override
-  protected void lowerArm()  {
+  protected void lowerArm(double operatorMultiplier)  {
   
-    armMotor.set(-.15);
+    armMotor.set(-.15*operatorMultiplier);
     
   }
 
   @Override
-  public void moveArm(boolean ArmUp) {
+  public void moveArm(boolean ArmUp, double operatorMultiplier){
     if (ArmUp) {
-      raiseArm();
+      raiseArm(operatorMultiplier);
       if(!armStatus){
         armTimer.reset();
       }
       armStatus = true;
     } else {
-      lowerArm();
+      lowerArm(operatorMultiplier);
       if(armStatus){
         armTimer.reset();
       }

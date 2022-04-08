@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
+import edu.wpi.first.wpilibj.Timer;
 public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoCloseable{
     private final MotorControllerGroup leftMotors;
     private final MotorControllerGroup rightMotors;
@@ -22,8 +23,10 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
     private static double scaleFactorD = 0.6;
     private static double scaleA = 0.65;
     private static double scaleB = 0.4;
+    protected Timer driveTimer;
 
     public CustomTankDrive(MotorControllerGroup leftMotors, MotorControllerGroup rightMotors){
+        driveTimer = new Timer();
         requireNonNull(leftMotors, "leftmotors could not be null");
         requireNonNull(rightMotors, "rightmotors could not be null");
         this.leftMotors = leftMotors;
@@ -51,7 +54,7 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         builder.setActuator(true);
         builder.setSafeState(this::stopMotor);
     }
-    public void drive(double forwardSpeed, double turnSpeed, double speedMultiplier , JoystickScaling scaleType,double curveScaling, DriveStyle driveStyle){
+    public void drive(double forwardSpeed, double turnSpeed, double speedMultiplier , JoystickScaling scaleType,double curveScaling, DriveStyle driveStyle, boolean driveBack){
         double turnPower = scaleValue(-turnSpeed, scaleType);
         double forwardPower = scaleValue(forwardSpeed, scaleType);
         switch(driveStyle){
@@ -140,7 +143,16 @@ public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoClo
         rightMotors.set(rightSpeed);
         leftMotors.set(-leftSpeed);
     }
-        feed();
+    
+    if (driveBack) {
+        driveTimer.reset();
+        driveTimer.start();
+        while (driveTimer.get() < 0.2) {
+            rightMotors.set(0.5);
+            leftMotors.set(-0.5);
+        }
+    }
+     feed();
     }
 
     public double scaleValue(double rawInput, JoystickScaling scaleType){

@@ -33,13 +33,13 @@ public abstract class RobotArmBase extends SubsystemBase {
   protected abstract void otherConfigs();
 
   // here put code to run when the arm is getting lower/ is low
-  protected abstract void lowerArm();
+  protected abstract void lowerArm(double operatorMultiplier);
 
   // here put code to run when the arm is raising / is raised
-  protected abstract void raiseArm();
+  protected abstract void raiseArm(double operatorMultiplier);
 
   // this is the method that is called by other objects, DO NOT OVERRIDE
-  public abstract void moveArm(boolean ArmUp);
+  public abstract void moveArm(boolean ArmUp, double operatorMultiplier);
 
   @Override
   public void periodic() {
