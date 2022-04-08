@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.DriveStyle;
 import frc.robot.Constants.JoystickScaling;
-import edu.wpi.first.wpilibj.Timer;
 public class CustomTankDrive extends RobotDriveBase implements Sendable, AutoCloseable{
     private final MotorControllerGroup leftMotors;
     private final MotorControllerGroup rightMotors;
